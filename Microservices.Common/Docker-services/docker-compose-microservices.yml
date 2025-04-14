@@ -149,34 +149,3 @@ services:
      interval: 10s
      timeout: 10s
      retries: 120
-
- postgres:
-    image: postgres
-    volumes:
-      - C:\Users\SESA670640\Desktop\postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-
- keycloak:
-    image: quay.io/keycloak/keycloak
-    volumes:
-      - C:\Users\SESA670640\Desktop\realm-import:/opt/keycloak/data/import
-    command: start-dev --import-realm
-    environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: password
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: AAAAAAAA
-      KC_HTTP_ENABLED: "true"
-      KC_HTTP_RELATIVE_PATH: "/auth"
-      KC_FEATURES: "preview,token-exchange"
-    ports:
-      - 8890:8080
-    depends_on:
-      - postgres 

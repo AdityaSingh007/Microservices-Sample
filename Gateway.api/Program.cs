@@ -21,12 +21,34 @@ builder.Services.AddHealthChecksUI(setup =>
     {
         client.DefaultRequestVersion = new Version(2, 0);
     });
+
+    setup.UseApiEndpointHttpMessageHandler((sp) =>
+    {
+        return new HttpClientHandler
+        {
+            ClientCertificateOptions = ClientCertificateOption.Manual,
+            ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
+            {
+                return true;
+            }
+        };
+    });
 })
 .AddInMemoryStorage();
 
 builder.Services.AddDistributedMemoryCache();
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("KeycloakClient").ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ClientCertificateOptions = ClientCertificateOption.Manual,
+        ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
+        {
+            return true;
+        }
+    };
+});
 
 builder.Services.ConfigureServicesAuthentication(builder.Configuration);
 builder.Services.ConfigureServicesAuthorization(new Dictionary<string, Action<AuthorizationPolicyBuilder>>()
@@ -38,7 +60,12 @@ builder.Services.AddRoleClaimsTransformation();
 
 builder.Services.AddReverseProxy()
                 .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
-                .AddTransforms<TokenExchangeTransform>();
+                .AddTransforms<TokenExchangeTransform>()
+                .ConfigureHttpClient((context, handler) =>
+                {
+                   handler.SslOptions.RemoteCertificateValidationCallback = (message, cert, chain, errors) => true;
+                });
+
 
 var app = builder.Build();
 

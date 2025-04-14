@@ -23,7 +23,11 @@ namespace Microservices.Shared
                             ValidAudiences = authenticationOptions.Audience,
                             ValidateIssuer = true,
                             ValidateIssuerSigningKey = true,
-                            ClockSkew = TimeSpan.FromSeconds(5)
+                            ClockSkew = TimeSpan.FromSeconds(5),
+                        };
+                        options.BackchannelHttpHandler = new HttpClientHandler()
+                        {
+                            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                         };
                         options.Events = new JwtBearerEvents()
                         {

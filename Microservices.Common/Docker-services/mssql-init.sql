@@ -1,14 +1,15 @@
-CREATE DATABASE microservices_db;
-go
+USE [master]
+GO
 
-USE microservices_db;
-go
+CREATE LOGIN [microservice_appuser_login] WITH PASSWORD=N'Appuser#123', DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=ON
+GO
 
-CREATE LOGIN microservice_appuser_login WITH PASSWORD='Admin@123', DEFAULT_DATABASE=microservices_db;
-go
+ALTER LOGIN [microservice_appuser_login] DISABLE
+GO
 
-CREATE USER microserviceappuser FOR LOGIN microservice_appuser_login WITH DEFAULT_SCHEMA=dbo;
-go
+ALTER SERVER ROLE [dbcreator] ADD MEMBER [microservice_appuser_login]
+GO
 
-ALTER ROLE dbcreator ADD MEMBER microserviceappuser;
-go
+ALTER LOGIN [microservice_appuser_login] ENABLE
+GO
+

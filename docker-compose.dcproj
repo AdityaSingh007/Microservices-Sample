@@ -10,4 +10,7 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Https-Certificates\" />
+  </ItemGroup>
 </Project>

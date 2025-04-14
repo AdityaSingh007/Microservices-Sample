@@ -14,5 +14,7 @@
         public bool RequireHttpsMetadata { get; set; } = false;
         public bool ValidateAudience { get; set; } = true;
         public List<string> RequiredRoles { get; set; } = [];
+
+        public string ValidIssuer { get; set; } = string.Empty;
     }
 }

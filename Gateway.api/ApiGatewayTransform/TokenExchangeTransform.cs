@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
+using System.Net.Http;
+using System.Security.Authentication;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
 
@@ -39,7 +41,7 @@ namespace Gateway.api.ApiGatewayTransform
 
                     if (!string.IsNullOrWhiteSpace(token))
                     {
-                        using var client = httpClientFactory.CreateClient();
+                        using var client = httpClientFactory.CreateClient("KeycloakClient");
                         var discoveryDocument = await client.GetDiscoveryDocumentAsync(options.Value.Authority);
 
                         if (discoveryDocument.IsError)
