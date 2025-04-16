@@ -25,7 +25,7 @@ namespace Microservice3.Extensions
                                 .Build();
 
             var customerApiEndpoints = endpointRouteBuilder.MapGroup("/api/v{apiVersion:apiVersion}/Customer").WithApiVersionSet(apiVersionSet);
-            customerApiEndpoints.MapGet("/{customerId:guid}", CustomerMessageHandler.GetCustometById).WithName("GetCustometById").RequireAuthorization(
+            customerApiEndpoints.MapGet("/{customerId:guid}", CustomerMessageHandler.GetCustomerById).WithName("GetCustomerById").RequireAuthorization(
                 AuthorizationConstants.BearerPolicyName,
                 AuthorizationConstants.ValidateScopePolicyName,
                 AuthorizationConstants.ValidateAudiencesPolicyName);

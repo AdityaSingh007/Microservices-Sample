@@ -111,6 +111,11 @@ namespace Microservice3.Services
                 await accountRepository.UpdateAsync(account);
 
                 var serviceBus_AccessToken = await clientCredentialsTokenManagementService.GetAccessTokenAsync(options.Value.ServiceBus_ClientId);
+                if (serviceBus_AccessToken == null || string.IsNullOrEmpty(serviceBus_AccessToken.AccessToken))
+                {
+                    logger.LogError("service bus access token found to be null or empty");
+                    throw new ArgumentException(nameof(serviceBus_AccessToken));
+                }
 
                 await publishEndpoint.Publish(new AccountTransactionEvent(Activity.Current != null ? Guid.Parse(Activity.Current.TraceId.ToString()) : Guid.NewGuid(), DateTime.UtcNow)
                 {

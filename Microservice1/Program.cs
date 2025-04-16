@@ -92,6 +92,8 @@ builder.Services.ConfigureServicesAuthorization(new Dictionary<string, Action<Au
     { AuthorizationConstants.ValidateAudiencesPolicyName, policy => policy.Requirements.Add(new MicroserviceAudienceAuthorizationRequirement()) }
 });
 
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 app.MigrateDatabase<CustomerContext>((context, services) =>

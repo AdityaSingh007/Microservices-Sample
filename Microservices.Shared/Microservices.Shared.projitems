@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AuthenticationOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HealthCheckConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HealthCheckRouteBuilderExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpClientConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoleClaimsTransformation.cs" />
   </ItemGroup>
 </Project>

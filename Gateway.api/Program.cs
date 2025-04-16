@@ -38,7 +38,13 @@ builder.Services.AddHealthChecksUI(setup =>
 
 builder.Services.AddDistributedMemoryCache();
 
-builder.Services.AddHttpClient("KeycloakClient").ConfigurePrimaryHttpMessageHandler(() =>
+builder.Services.ConfigureServicesAuthentication(builder.Configuration);
+builder.Services.ConfigureServicesAuthorization(new Dictionary<string, Action<AuthorizationPolicyBuilder>>()
+{
+    { JwtBearerDefaults.AuthenticationScheme, policy => policy.RequireAuthenticatedUser() },
+});
+
+builder.Services.AddHttpClient(HttpClientConstants.KeycloakHttpClientName).ConfigurePrimaryHttpMessageHandler(() =>
 {
     return new HttpClientHandler
     {
@@ -48,12 +54,6 @@ builder.Services.AddHttpClient("KeycloakClient").ConfigurePrimaryHttpMessageHand
             return true;
         }
     };
-});
-
-builder.Services.ConfigureServicesAuthentication(builder.Configuration);
-builder.Services.ConfigureServicesAuthorization(new Dictionary<string, Action<AuthorizationPolicyBuilder>>()
-{
-    { JwtBearerDefaults.AuthenticationScheme, policy => policy.RequireAuthenticatedUser() },
 });
 
 builder.Services.AddRoleClaimsTransformation();

@@ -72,7 +72,18 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 builder.Services.AddHttpClient<ICustomerService, CustomerService>()
                 .AddPolicyHandler(HttpPolicy.GetRetryPolicy())
-                .AddPolicyHandler(HttpPolicy.GetCircuitBreakerPolicy());
+                .AddPolicyHandler(HttpPolicy.GetCircuitBreakerPolicy())
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    var handler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
+                        {
+                            return true;
+                        }
+                    };
+                    return handler;
+                });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -91,6 +102,14 @@ builder.Services.AddClientCredentialsTokenManagement()
         client.ClientId = builder.Configuration["ServiceBusAuthenticationParameters:ServiceBus_ClientId"];
         client.ClientSecret = builder.Configuration["ServiceBusAuthenticationParameters:ServiceBus_ClientSecret"];
         client.Scope = builder.Configuration["ServiceBusAuthenticationParameters:ServiceBus_Scope"];
+        var handler = new HttpClientHandler()
+        {
+            ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
+            {
+                return true;
+            }
+        };
+        client.HttpClient = new HttpClient(handler);
     });
 
 builder.Services.AddSingleton<IAuthorizationHandler, MicroserviceScopeHandler>();

@@ -8,7 +8,7 @@ namespace Microservice3.EndpointHandlers
 {
     public static class CustomerMessageHandler
     {
-        public static async Task<Results<NotFound, Ok<CustomerDto>>> GetCustometById(
+        public static async Task<Results<NotFound, Ok<CustomerDto>>> GetCustomerById(
             ICustomerRepository customerRepository,
             IMapper mapper,
             Guid customerId,
@@ -32,12 +32,14 @@ namespace Microservice3.EndpointHandlers
             ICustomerRepository customerRepository,
             IMapper mapper,
             CustomerDto customerDto,
-            ILogger<Customer> logger)
+            ILogger<Customer> logger,
+            IHttpContextAccessor httpContextAccessor)
         {
             var customer = mapper.Map<Customer>(customerDto);
             customer = await customerRepository.AddAsync(customer);
             logger.LogInformation("Customer created with id:{@customerId}", customer.Id.ToString());
-            return TypedResults.CreatedAtRoute(mapper.Map<CustomerDto>(customer), "GetCustometById", new
+            httpContextAccessor.HttpContext?.Response?.Headers?.Append("customerId", customer.Id.ToString());
+            return TypedResults.CreatedAtRoute(mapper.Map<CustomerDto>(customer), "GetCustomerById", new
             {
                 customerId = customer.Id
             });

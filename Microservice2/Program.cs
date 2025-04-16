@@ -83,7 +83,17 @@ builder.Services.ConfigureHealthChecks(builder.Configuration,
     databaseName: "transaction_db",
     connectionStringName: "TransactionDb");
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient(HttpClientConstants.KeycloakHttpClientName).ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ClientCertificateOptions = ClientCertificateOption.Manual,
+        ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
+        {
+            return true;
+        }
+    };
+});
 
 builder.Services.AddSingleton<IAuthorizationHandler, MicroserviceScopeHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, MicroserviceAudienceAuthorizationHandler>();

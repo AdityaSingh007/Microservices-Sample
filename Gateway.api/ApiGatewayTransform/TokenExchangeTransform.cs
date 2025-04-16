@@ -1,4 +1,5 @@
 ﻿using Duende.IdentityModel.Client;
+using Microservices.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Caching.Distributed;
@@ -41,7 +42,7 @@ namespace Gateway.api.ApiGatewayTransform
 
                     if (!string.IsNullOrWhiteSpace(token))
                     {
-                        using var client = httpClientFactory.CreateClient("KeycloakClient");
+                        using var client = httpClientFactory.CreateClient(HttpClientConstants.KeycloakHttpClientName);
                         var discoveryDocument = await client.GetDiscoveryDocumentAsync(options.Value.Authority);
 
                         if (discoveryDocument.IsError)

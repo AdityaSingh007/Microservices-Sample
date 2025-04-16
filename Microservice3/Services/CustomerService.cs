@@ -17,7 +17,7 @@ namespace Microservice3.Services
             ILogger<CustomerService> logger,
             IHttpContextAccessor httpContextAccessor)
         {
-            this._httpClient = httpClient;
+            _httpClient = httpClient;
             this.logger = logger;
             this.httpContextAccessor = httpContextAccessor;
             _httpClient.BaseAddress = new Uri(configuration["ApiUrls:CustomerApiUrl"] ?? string.Empty);
