@@ -28,7 +28,7 @@ namespace Microservices.Common.Authorization
         {
             try
             {
-                using var _client = httpClientFactory.CreateClient("KeycloakClient");
+                using var _client = httpClientFactory.CreateClient(HttpClientConstants.DefaultHttpClientName);
                 var discoveryDocumentResponse = await _client.GetDiscoveryDocumentAsync(options.Value.Authority);
                 if (discoveryDocumentResponse.IsError)
                 {

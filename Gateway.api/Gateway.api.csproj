@@ -26,6 +26,10 @@
     <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Microservices.Common\Microservices.Common.csproj" />
+  </ItemGroup>
+
   <Import Project="..\Microservices.Shared\Microservices.Shared.projitems" Label="Shared" />
 
 </Project>

@@ -16,7 +16,14 @@ using ServiceBus.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi 
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+builder.Configuration.AddJsonFile(
+        $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
+        optional: false,
+        reloadOnChange: true
+     ).AddEnvironmentVariables();
+
 builder.Host.UseSerilog(Logging.ConfigureLogger);
 
 builder.Services.AddOpenApi();
@@ -112,7 +119,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseSerilogRequestLogging();
+app.AddMicroserviceRequestLogging();
 
 app.UseHttpsRedirection();
 

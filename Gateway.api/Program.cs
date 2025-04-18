@@ -1,4 +1,5 @@
 using Gateway.api.ApiGatewayTransform;
+using Microservices.Common.Http_Clients_Registration;
 using Microservices.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+builder.Configuration.AddJsonFile(
+        $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
+        optional: false,
+        reloadOnChange: true
+     ).AddEnvironmentVariables();
+
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(s =>
@@ -44,17 +52,7 @@ builder.Services.ConfigureServicesAuthorization(new Dictionary<string, Action<Au
     { JwtBearerDefaults.AuthenticationScheme, policy => policy.RequireAuthenticatedUser() },
 });
 
-builder.Services.AddHttpClient(HttpClientConstants.KeycloakHttpClientName).ConfigurePrimaryHttpMessageHandler(() =>
-{
-    return new HttpClientHandler
-    {
-        ClientCertificateOptions = ClientCertificateOption.Manual,
-        ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
-        {
-            return true;
-        }
-    };
-});
+builder.Services.RegisterDefaultHttpClient(builder.Configuration);
 
 builder.Services.AddRoleClaimsTransformation();
 

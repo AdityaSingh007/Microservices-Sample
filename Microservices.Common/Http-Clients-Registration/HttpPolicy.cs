@@ -1,7 +1,7 @@
 ﻿using Polly;
 using Polly.Extensions.Http;
 
-namespace Microservice3.Infrastructure.Policy
+namespace Microservices.Common.Http_Clients_Registration
 {
     public static class HttpPolicy
     {
@@ -17,7 +17,7 @@ namespace Microservice3.Infrastructure.Policy
                 );
         }
 
-        public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy() 
+        public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
         {
             return HttpPolicyExtensions.HandleTransientHttpError()
                                        .CircuitBreakerAsync(3, TimeSpan.FromSeconds(15));

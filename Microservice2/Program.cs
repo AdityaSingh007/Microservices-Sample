@@ -9,6 +9,7 @@ using Microservice3.Infrastructure.Repositories;
 using Microservice3.Infrastructure.Repositories.Interface;
 using Microservices.Common;
 using Microservices.Common.Authorization;
+using Microservices.Common.Http_Clients_Registration;
 using Microservices.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,13 @@ builder.Host.UseSerilog(Logging.ConfigureLogger);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+builder.Configuration.AddJsonFile(
+        $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
+        optional: false,
+        reloadOnChange: true
+     ).AddEnvironmentVariables();
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddMassTransit(x =>
@@ -83,17 +91,7 @@ builder.Services.ConfigureHealthChecks(builder.Configuration,
     databaseName: "transaction_db",
     connectionStringName: "TransactionDb");
 
-builder.Services.AddHttpClient(HttpClientConstants.KeycloakHttpClientName).ConfigurePrimaryHttpMessageHandler(() =>
-{
-    return new HttpClientHandler
-    {
-        ClientCertificateOptions = ClientCertificateOption.Manual,
-        ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
-        {
-            return true;
-        }
-    };
-});
+builder.Services.RegisterDefaultHttpClient(builder.Configuration);
 
 builder.Services.AddSingleton<IAuthorizationHandler, MicroserviceScopeHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, MicroserviceAudienceAuthorizationHandler>();
@@ -131,7 +129,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseSerilogRequestLogging();
+app.AddMicroserviceRequestLogging();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

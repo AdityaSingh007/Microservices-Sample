@@ -1,4 +1,5 @@
 ﻿using Duende.IdentityModel.Client;
+using Microservices.Common;
 using Microservices.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,7 +43,7 @@ namespace Gateway.api.ApiGatewayTransform
 
                     if (!string.IsNullOrWhiteSpace(token))
                     {
-                        using var client = httpClientFactory.CreateClient(HttpClientConstants.KeycloakHttpClientName);
+                        using var client = httpClientFactory.CreateClient(HttpClientConstants.DefaultHttpClientName);
                         var discoveryDocument = await client.GetDiscoveryDocumentAsync(options.Value.Authority);
 
                         if (discoveryDocument.IsError)

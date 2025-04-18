@@ -5,11 +5,11 @@ using Microservice3.AuthorizationHandlers;
 using Microservice3.Contracts;
 using Microservice3.Extensions;
 using Microservice3.Infrastructure.Persistence;
-using Microservice3.Infrastructure.Policy;
 using Microservice3.Infrastructure.Repositories;
 using Microservice3.Services;
 using Microservices.Common;
 using Microservices.Common.Authorization;
+using Microservices.Common.Http_Clients_Registration;
 using Microservices.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +17,13 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile(
+        $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
+        optional: false,
+        reloadOnChange: true
+     ).AddEnvironmentVariables();
+
 builder.Host.UseSerilog(Logging.ConfigureLogger);
 
 // Add services to the container.
@@ -70,20 +77,7 @@ builder.Services.AddDbContext<AccountContext>(options =>
 builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
-builder.Services.AddHttpClient<ICustomerService, CustomerService>()
-                .AddPolicyHandler(HttpPolicy.GetRetryPolicy())
-                .AddPolicyHandler(HttpPolicy.GetCircuitBreakerPolicy())
-                .ConfigurePrimaryHttpMessageHandler(() =>
-                {
-                    var handler = new HttpClientHandler()
-                    {
-                        ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
-                        {
-                            return true;
-                        }
-                    };
-                    return handler;
-                });
+builder.Services.AddTypedHttpClientWithPolicies<ICustomerService, CustomerService>(builder.Configuration);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -102,14 +96,7 @@ builder.Services.AddClientCredentialsTokenManagement()
         client.ClientId = builder.Configuration["ServiceBusAuthenticationParameters:ServiceBus_ClientId"];
         client.ClientSecret = builder.Configuration["ServiceBusAuthenticationParameters:ServiceBus_ClientSecret"];
         client.Scope = builder.Configuration["ServiceBusAuthenticationParameters:ServiceBus_Scope"];
-        var handler = new HttpClientHandler()
-        {
-            ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
-            {
-                return true;
-            }
-        };
-        client.HttpClient = new HttpClient(handler);
+        client.HttpClient = HttpClientServiceExtension.CreateDefaultHttpClient(builder.Configuration);
     });
 
 builder.Services.AddSingleton<IAuthorizationHandler, MicroserviceScopeHandler>();
@@ -146,7 +133,7 @@ app.MigrateDatabase<AccountContext>((context, services) =>
         .Wait();
 });
 
-app.UseSerilogRequestLogging();
+app.AddMicroserviceRequestLogging();
 
 app.UseAuthentication();
 app.UseAuthorization();
