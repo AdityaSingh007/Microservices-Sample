@@ -10,10 +10,10 @@ volumes:
    driver: local
 
 
-networks:
- default:
-   name: elastic
-   external: false
+# networks:
+#  default:
+#    name: elastic
+#    external: false
 
 
 services:

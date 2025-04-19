@@ -1,3 +1,6 @@
+include:
+  - docker-compose-dev-logging.yml
+
 name: microservices-containers
 
 services:
