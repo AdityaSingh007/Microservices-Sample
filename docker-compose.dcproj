@@ -8,7 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include=".env" />
-    <None Include="docker-compose-dev-identity.yml" />
+    <None Include="docker-compose-dev.yml" />
     <None Include="docker-compose-dev-logging.yml" />
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />

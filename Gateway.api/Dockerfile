@@ -13,6 +13,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Gateway.api/Gateway.api.csproj", "Gateway.api/"]
+COPY ["Microservices.Common/Microservices.Common.csproj", "Microservices.Common/"]
 RUN dotnet restore "./Gateway.api/Gateway.api.csproj"
 COPY . .
 WORKDIR "/src/Gateway.api"

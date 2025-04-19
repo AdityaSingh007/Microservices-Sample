@@ -20,7 +20,7 @@ services:
       - C:\Users\SESA670640\Desktop\realm-import:/opt/keycloak/data/import
       - ./Https-Certificates/localhost.crt:/opt/keycloak/conf/server.crt
       - ./Https-Certificates/localhost.key:/opt/keycloak/conf/server.key
-    command: start-dev --import-realm
+    command: start --import-realm
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
@@ -34,6 +34,11 @@ services:
       KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/server.key
       KC_HTTP_RELATIVE_PATH: "/auth"
       KC_FEATURES: "preview,token-exchange"
+      KC_HEALTH_ENABLED: true
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_PROXY: edge
     ports:
       - ${KEYCLOAK_HTTPS_SERVER_PORT}:${KEYCLOAK_HTTPS_SERVER_PORT}
     networks:
@@ -81,6 +86,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
+      - ASPNETCORE_ENVIRONMENT=Production
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -107,6 +113,7 @@ services:
       - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
       - ServiceBusAuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
       - ServiceBusAuthenticationParameters__TokenEndpoint=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+      - ASPNETCORE_ENVIRONMENT=Production
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -133,6 +140,7 @@ services:
       - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
       - ServiceBusAuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
       - ServiceBusAuthenticationParameters__TokenEndpoint=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+      - ASPNETCORE_ENVIRONMENT=Production
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -159,6 +167,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
       - AuthenticationParameters__TokenEndpoint=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+      - ASPNETCORE_ENVIRONMENT=Production
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
