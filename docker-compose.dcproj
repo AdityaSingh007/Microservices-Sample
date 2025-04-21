@@ -12,8 +12,7 @@
     <None Include="docker-compose-dev-logging.yml" />
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Https-Certificates\" />
+    <None Include="Https-Certificates\localhost.crt" />
+    <None Include="Https-Certificates\localhost.key" />
   </ItemGroup>
 </Project>
