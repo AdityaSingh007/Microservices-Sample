@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microservices.Common.Http_Clients_Registration;
+using Microservices.Common.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.AspNetCore;
 
@@ -15,6 +20,12 @@ namespace Microservices.Common
                 {
                     opts.GetLevel = (ctx, elapsed, ex) => LogHelper.ExcludeHealthChecks(ctx, elapsed, ex!);
                 });
+        }
+
+        public static void RegisterLoggingParameterOptions(this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.Configure<LoggingOptions>(configuration.GetSection(LoggingOptions.ConfigurationSection));
         }
     }
 }

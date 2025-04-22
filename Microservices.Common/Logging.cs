@@ -3,6 +3,8 @@ using Elastic.CommonSchema.Serilog;
 using Elastic.Ingest.Elasticsearch;
 using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Serilog.Sinks;
+using Elastic.Transport;
+using Microservices.Common.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -32,11 +34,12 @@ namespace Microservices.Common
                 loggerConfiguration.MinimumLevel.Override("Microservices", Serilog.Events.LogEventLevel.Warning);
             }
 
-            var elasticUrl = hostingContext.Configuration.GetValue<string>("ElasticUrl");
+            var loggingOptions = new LoggingOptions();
+            hostingContext.Configuration.GetSection(LoggingOptions.ConfigurationSection).Bind(loggingOptions);
 
-            if (!string.IsNullOrEmpty(elasticUrl))
+            if (!string.IsNullOrEmpty(loggingOptions.LoggingUrl))
             {
-                loggerConfiguration.WriteTo.Elasticsearch(new[] { new Uri(elasticUrl) }, opts =>
+                loggerConfiguration.WriteTo.Elasticsearch(new[] { new Uri(loggingOptions.LoggingUrl) }, opts =>
                 {
                     opts.DataStream = new DataStreamName("logs", "microservicesdemo", "Microservices");
                     opts.TextFormatting = new EcsTextFormatterConfiguration();
@@ -45,6 +48,11 @@ namespace Microservices.Common
                     {
                         channelOpts.BufferOptions = new BufferOptions { ExportMaxConcurrency = 10 };
                     };
+                }, transport =>
+                {
+                    transport.ServerCertificateValidationCallback((sender, cert, chain, sslPolicyErrors) => true);
+
+                    transport.Authentication(new BasicAuthentication(loggingOptions.ElasticUserName, loggingOptions.ElasticPassword));
                 });
             }
         };
