@@ -4,6 +4,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{9FACCF52-C002-4B97-B8A2-AEB7EAD220AA}"
+	ProjectSection(SolutionItems) = preProject
+		Frontend\org\.editorconfig = Frontend\org\.editorconfig
+		Frontend\org\.gitignore = Frontend\org\.gitignore
+		Frontend\org\.prettierignore = Frontend\org\.prettierignore
+		Frontend\org\.prettierrc = Frontend\org\.prettierrc
+		Frontend\org\eslint.config.mjs = Frontend\org\eslint.config.mjs
+		Frontend\org\jest.config.ts = Frontend\org\jest.config.ts
+		Frontend\org\jest.preset.js = Frontend\org\jest.preset.js
+		Frontend\org\nx.json = Frontend\org\nx.json
+		Frontend\org\package-lock.json = Frontend\org\package-lock.json
+		Frontend\org\package.json = Frontend\org\package.json
+		Frontend\org\README.md = Frontend\org\README.md
+		Frontend\org\tsconfig.base.json = Frontend\org\tsconfig.base.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{FCEBA837-0DA2-4DE9-A7DE-E9962BCF34D6}"
 EndProject

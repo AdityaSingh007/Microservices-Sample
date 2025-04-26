@@ -108,6 +108,8 @@ services:
      interval: 10s
      timeout: 10s
      retries: 120
+   networks:
+      - my-network
      
  kibana:
    depends_on:
@@ -141,3 +143,5 @@ services:
      interval: 10s
      timeout: 10s
      retries: 120
+   networks:
+      - my-network

@@ -1,0 +1,49 @@
+<mat-toolbar
+  color="primary"
+  fxLayout="row"
+  fxLayoutAlign="space-between center"
+>
+  <a mat-button routerLink="/"
+    ><mat-icon
+      aria-hidden="false"
+      aria-label="Example home icon"
+      fontIcon="home"
+    ></mat-icon
+  ></a>
+  @if (isAuthenticated) {
+  <a mat-button routerLink="/customer">Customer</a>
+  <a mat-button routerLink="/transaction">Transaction</a>
+  <a mat-button routerLink="/account">Account</a>
+  }
+  <span class="example-spacer"></span>
+  @if (!isAuthenticated) {
+  <button mat-button (click)="login()">
+    <mat-icon
+      aria-hidden="false"
+      aria-label="Example login icon"
+      fontIcon="login"
+    ></mat-icon>
+    Login
+  </button>
+  } @else {
+  <button mat-button (click)="logout()">
+    <mat-icon
+      aria-hidden="false"
+      aria-label="Example logout icon"
+      fontIcon="logout"
+    ></mat-icon>
+    Logout
+  </button>
+  <button mat-button>
+    <mat-icon
+      aria-hidden="false"
+      aria-label="Example account icon"
+      fontIcon="account_circle"
+    ></mat-icon>
+    Account
+  </button>
+  }
+</mat-toolbar>
+<div style="margin-top: 10px">
+  <router-outlet></router-outlet>
+</div>

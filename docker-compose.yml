@@ -1,227 +1,237 @@
 include:
   - docker-compose-dev-logging.yml
 
-# name: microservices-containers
+name: microservices-containers
 
-# services:
-#   postgres:
-#     image: postgres
-#     container_name: microservices-identity-database
-#     volumes:
-#       - C:\Users\SESA670640\Desktop\postgres_data:/var/lib/postgresql/data
-#     environment:
-#       POSTGRES_DB: keycloak
-#       POSTGRES_USER: keycloak
-#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#     networks:
-#       - my-network
+services:
 
-#   keycloak:
-#     image: quay.io/keycloak/keycloak
-#     container_name: microservices-keycloak-identity
-#     volumes:
-#       - C:\Users\SESA670640\Desktop\realm-import:/opt/keycloak/data/import
-#       - ./Https-Certificates/localhost.crt:/opt/keycloak/conf/server.crt
-#       - ./Https-Certificates/localhost.key:/opt/keycloak/conf/server.key
-#     command: start --import-realm
-#     environment:
-#       DB_VENDOR: POSTGRES
-#       DB_ADDR: postgres
-#       DB_DATABASE: keycloak
-#       DB_USER: keycloak
-#       DB_SCHEMA: public
-#       DB_PASSWORD: ${DB_PASSWORD}
-#       KEYCLOAK_ADMIN: admin
-#       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-#       KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/conf/server.crt
-#       KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/server.key
-#       KC_HTTP_RELATIVE_PATH: "/auth"
-#       KC_FEATURES: "preview,token-exchange"
-#       KC_HEALTH_ENABLED: true
-#       KC_HOSTNAME_STRICT: "false"
-#       KC_HOSTNAME_STRICT_HTTPS: "false"
-#       KC_HTTP_ENABLED: "true"
-#       KC_PROXY: edge
-#     ports:
-#       - ${KEYCLOAK_HTTPS_SERVER_PORT}:${KEYCLOAK_HTTPS_SERVER_PORT}
-#     healthcheck:
-#       test: ["CMD-SHELL",
-#           'exec 3<>/dev/tcp/localhost/8080; echo -e "GET /health/ready HTTP/1.1\nhost: localhost:8080\n" >&3; timeout --preserve-status 1 cat <&3 | grep -m 1 status | grep -m 1 UP; ERROR=$?; exec 3<&-; exec 3>&-; exit $ERROR']
-#       interval: 5s
-#       timeout: 5s
-#       retries: 30
-#     networks:
-#       - my-network
-#     depends_on:
-#       - postgres  
+  postgres:
+    image: postgres
+    container_name: microservices-identity-database
+    volumes:
+      - C:\Users\SESA670640\Desktop\postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - my-network
 
-#   sqlserver:
-#     image: mcr.microsoft.com/mssql/server:2022-latest
-#     hostname: microservices-sqlserver
-#     container_name: microservices-sqlserver
-#     environment:
-#       ACCEPT_EULA: "Y"
-#       MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
-#     ports:
-#       - "1433:1433"
-#     volumes:
-#       - C:\Users\SESA670640\Desktop\microservice_data\data:/var/opt/mssql/data
-#       - C:\Users\SESA670640\Desktop\microservice_data\log:/var/opt/mssql/log
-#       - C:\Users\SESA670640\Desktop\microservice_data\secrets:/var/opt/mssql/secrets
-#     healthcheck:
-#       test: /opt/mssql-tools18/bin/sqlcmd -C -S microservices-sqlserver -U sa -P "${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -b -o /dev/null
-#       interval: 5s
-#       timeout: 5s
-#       retries: 30
-#     networks:
-#       - my-network 
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    container_name: microservices-keycloak-identity
+    volumes:
+      - C:\Users\SESA670640\Desktop\realm-import:/opt/keycloak/data/import
+      - ./Https-Certificates/localhost.crt:/opt/keycloak/conf/server.crt
+      - ./Https-Certificates/localhost.key:/opt/keycloak/conf/server.key
+    command: start --import-realm
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: ${DB_PASSWORD}
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/conf/server.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/server.key
+      KC_HTTP_RELATIVE_PATH: "/auth"
+      KC_FEATURES: "preview,token-exchange"
+      KC_HEALTH_ENABLED: true
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_PROXY: edge
+    ports:
+      - ${KEYCLOAK_HTTPS_SERVER_PORT}:${KEYCLOAK_HTTPS_SERVER_PORT}
+    healthcheck:
+      test: ["CMD-SHELL",
+          'exec 3<>/dev/tcp/localhost/8080; echo -e "GET /health/ready HTTP/1.1\nhost: localhost:8080\n" >&3; timeout --preserve-status 1 cat <&3 | grep -m 1 status | grep -m 1 UP; ERROR=$?; exec 3<&-; exec 3>&-; exit $ERROR']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    networks:
+      - my-network
+    depends_on:
+      - postgres  
 
-#   mssql-tools:
-#     image: mcr.microsoft.com/mssql-tools:latest
-#     restart: on-failure
-#     command: "/opt/mssql-tools/bin/sqlcmd -S microservices-sqlserver -l 60 -U sa -P '${MSSQL_SA_PASSWORD}' -d master -i /tmp/mssql-init.sql"
-#     depends_on:
-#       - sqlserver
-#     volumes:
-#       - C:\Users\SESA670640\Desktop\microservice_data\mssql-init.sql:/tmp/mssql-init.sql
-#     networks:
-#       - my-network 
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    hostname: microservices-sqlserver
+    container_name: microservices-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - C:\Users\SESA670640\Desktop\microservice_data\data:/var/opt/mssql/data
+      - C:\Users\SESA670640\Desktop\microservice_data\log:/var/opt/mssql/log
+      - C:\Users\SESA670640\Desktop\microservice_data\secrets:/var/opt/mssql/secrets
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S microservices-sqlserver -U sa -P "${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -b -o /dev/null
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    networks:
+      - my-network 
+
+  mssql-tools:
+    image: mcr.microsoft.com/mssql-tools:latest
+    restart: on-failure
+    command: "/opt/mssql-tools/bin/sqlcmd -S microservices-sqlserver -l 60 -U sa -P '${MSSQL_SA_PASSWORD}' -d master -i /tmp/mssql-init.sql"
+    depends_on:
+      - sqlserver
+    volumes:
+      - C:\Users\SESA670640\Desktop\microservice_data\mssql-init.sql:/tmp/mssql-init.sql
+    networks:
+      - my-network 
        
-#   microservice1:
-#     image: ${DOCKER_REGISTRY-}microservice1:latest
-#     container_name: microservice1
-#     restart: unless-stopped
-#     build:
-#       context: .
-#       dockerfile: microservice1/Dockerfile
-#     environment:
-#       - ASPNETCORE_URLS=http://*:8080/;https://*:8081/
-#       - ASPNETCORE_HTTPS_PORTS=8081
-#       - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
-#       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-#       - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
-#       - ASPNETCORE_ENVIRONMENT=Production
-#     volumes:
-#       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-#       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-#       - $USERPROFILE\.aspnet\https:/https/
+  microservice1:
+    image: ${DOCKER_REGISTRY-}microservice1:latest
+    container_name: microservice1
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: microservice1/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://*:8080/;https://*:8081/
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
+      - ASPNETCORE_ENVIRONMENT=Production
+      - LoggingParameters__LoggingUrl=https://es01:9200
+      - LoggingParameters__ElasticUserName=elastic
+      - LoggingParameters__ElasticPassword=${ELASTIC_PASSWORD}
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - $USERPROFILE\.aspnet\https:/https/
 
-#     depends_on:
-#         sqlserver:
-#           condition: service_healthy
-#         keycloak:
-#           condition: service_healthy
+    depends_on:
+        sqlserver:
+          condition: service_healthy
+        keycloak:
+          condition: service_healthy
 
-#     healthcheck:
-#      test: ["CMD-SHELL","curl --insecure -s -I https://microservice1:8081/health/live"]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 120
-#     networks:
-#       - my-network
+    healthcheck:
+     test: ["CMD-SHELL","curl --insecure -s -I https://microservice1:8081/health/live"]
+     interval: 30s
+     timeout: 5s
+     retries: 120
+    networks:
+      - my-network
 
-#   microservice2:
-#     image: ${DOCKER_REGISTRY-}microservice2:latest
-#     container_name: microservice2
-#     restart: unless-stopped
-#     build:
-#       context: .
-#       dockerfile: microservice2/Dockerfile
-#     environment:
-#       - ASPNETCORE_URLS=http://*:8080/;https://*:8081/
-#       - ASPNETCORE_HTTPS_PORTS=8081
-#       - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
-#       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-#       - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
-#       - ServiceBusAuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
-#       - ServiceBusAuthenticationParameters__TokenEndpoint=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
-#       - ASPNETCORE_ENVIRONMENT=Production
-#     volumes:
-#       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-#       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-#       - $USERPROFILE\.aspnet\https:/https/
+  microservice2:
+    image: ${DOCKER_REGISTRY-}microservice2:latest
+    container_name: microservice2
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: microservice2/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://*:8080/;https://*:8081/
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
+      - ServiceBusAuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
+      - ServiceBusAuthenticationParameters__TokenEndpoint=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+      - ASPNETCORE_ENVIRONMENT=Production
+      - LoggingParameters__LoggingUrl=https://es01:9200
+      - LoggingParameters__ElasticUserName=elastic
+      - LoggingParameters__ElasticPassword=${ELASTIC_PASSWORD}
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - $USERPROFILE\.aspnet\https:/https/
 
-#     depends_on:
-#         sqlserver:
-#           condition: service_healthy
-#         keycloak:
-#           condition: service_healthy
+    depends_on:
+        sqlserver:
+          condition: service_healthy
+        keycloak:
+          condition: service_healthy
 
-#     healthcheck:
-#      test: ["CMD-SHELL","curl --insecure -s -I https://microservice2:8081/health/live"]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 120
-#     networks:
-#       - my-network
+    healthcheck:
+     test: ["CMD-SHELL","curl --insecure -s -I https://microservice2:8081/health/live"]
+     interval: 30s
+     timeout: 5s
+     retries: 120
+    networks:
+      - my-network
 
-#   microservice3:
-#     image: ${DOCKER_REGISTRY-}microservice3:latest
-#     container_name: microservice3
-#     restart: unless-stopped
-#     build:
-#       context: .
-#       dockerfile: microservice3/Dockerfile
-#     environment:
-#       - ASPNETCORE_URLS=http://*:8080/;https://*:8081/
-#       - ASPNETCORE_HTTPS_PORTS=8081
-#       - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
-#       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-#       - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
-#       - ServiceBusAuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
-#       - ServiceBusAuthenticationParameters__TokenEndpoint=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
-#       - ASPNETCORE_ENVIRONMENT=Production
-#     volumes:
-#       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-#       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-#       - $USERPROFILE\.aspnet\https:/https/
+  microservice3:
+    image: ${DOCKER_REGISTRY-}microservice3:latest
+    container_name: microservice3
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: microservice3/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://*:8080/;https://*:8081/
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
+      - ServiceBusAuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
+      - ServiceBusAuthenticationParameters__TokenEndpoint=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+      - ASPNETCORE_ENVIRONMENT=Production
+      - LoggingParameters__LoggingUrl=https://es01:9200
+      - LoggingParameters__ElasticUserName=elastic
+      - LoggingParameters__ElasticPassword=${ELASTIC_PASSWORD}
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - $USERPROFILE\.aspnet\https:/https/
 
-#     depends_on:
-#         sqlserver:
-#           condition: service_healthy
-#         keycloak:
-#           condition: service_healthy
-#         microservice1:
-#           condition: service_healthy
+    depends_on:
+        sqlserver:
+          condition: service_healthy
+        keycloak:
+          condition: service_healthy
+        microservice1:
+          condition: service_healthy
 
-#     healthcheck:
-#      test: ["CMD-SHELL","curl --insecure -s -I https://microservice3:8081/health/live"]
-#      interval: 30s
-#      timeout: 5s
-#      retries: 120
-#     networks:
-#       - my-network
+    healthcheck:
+     test: ["CMD-SHELL","curl --insecure -s -I https://microservice3:8081/health/live"]
+     interval: 30s
+     timeout: 5s
+     retries: 120
+    networks:
+      - my-network
 
-#   gateway.api:
-#     image: ${DOCKER_REGISTRY-}gatewayapi:latest
-#     container_name: gatewayApi
-#     restart: unless-stopped
-#     build:
-#       context: .
-#       dockerfile: Gateway.api/Dockerfile
-#     environment:
-#       - ASPNETCORE_URLS=http://*:8080/;https://*:8081/
-#       - ASPNETCORE_HTTPS_PORTS=8081
-#       - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
-#       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-#       - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
-#       - AuthenticationParameters__TokenEndpoint=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
-#       - ASPNETCORE_ENVIRONMENT=Production
-#     volumes:
-#       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-#       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-#       - $USERPROFILE\.aspnet\https:/https/
-#     ports:
-#       - "7274:8081"
-#     depends_on:
-#        sqlserver:
-#           condition: service_healthy
-#        keycloak:
-#           condition: service_healthy
-#     networks:
-#       - my-network
+  gateway.api:
+    image: ${DOCKER_REGISTRY-}gatewayapi:latest
+    container_name: gatewayApi
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Gateway.api/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://*:8080/;https://*:8081/
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - AuthenticationParameters__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
+      - AuthenticationParameters__TokenEndpoint=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+      - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - $USERPROFILE\.aspnet\https:/https/
+    ports:
+      - "7274:8081"
+    depends_on:
+       sqlserver:
+          condition: service_healthy
+       keycloak:
+          condition: service_healthy
+    networks:
+      - my-network
      
-# networks:
-#   "my-network":
-#     driver: bridge
+networks:
+  "my-network":
+    driver: bridge
   
