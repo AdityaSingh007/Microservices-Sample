@@ -4,6 +4,12 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile(
+        $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
+        optional: false,
+        reloadOnChange: true
+     ).AddEnvironmentVariables();
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -22,9 +28,9 @@ builder.Services.AddAuthentication(options =>
     options.Cookie.SameSite = SameSiteMode.Strict;
 }).AddOpenIdConnect("oidc", options =>
 {
-    options.Authority = "https://localhost:8443/auth/realms/MicroserviceIdentity";
-    options.ClientId = "Microservice_Frontend";
-    options.ClientSecret = "QYyqZYcTn56ewEjmpQPn0flcsWprJpUM";
+    options.Authority = builder.Configuration["OIDC:Authority"];
+    options.ClientId = builder.Configuration["OIDC:Client_Id"];
+    options.ClientSecret = builder.Configuration["OIDC:Client_Secret"];
     options.ResponseType = "code";
     options.ResponseMode = "query";
     options.GetClaimsFromUserInfoEndpoint = true;
@@ -41,7 +47,6 @@ builder.Services.AddAuthentication(options =>
         OnTokenResponseReceived = context =>
          {
              var tokenResponse = context.TokenEndpointResponse;
-             Console.WriteLine(tokenResponse.AccessToken);
              return Task.CompletedTask;
          },
     };
@@ -67,7 +72,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Comment this in to use the external api
-app.MapRemoteBffApiEndpoint("/api", "https://localhost:7274/api")
+app.MapRemoteBffApiEndpoint("/api", app.Configuration["RemoteBffApiEndpoint"])
    .RequireAccessToken(Duende.Bff.TokenType.User);
 
 app.MapFallbackToFile("/index.html");
