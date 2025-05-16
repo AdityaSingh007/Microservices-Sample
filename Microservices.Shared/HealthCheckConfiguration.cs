@@ -17,5 +17,10 @@ namespace Microservices.Shared
                     .AddSqlServer(connectionString, healthQuery: "select 1", name: "SQL Server", 
                     failureStatus: HealthStatus.Unhealthy, tags: new[] { "Service", databaseName });
         }
+
+        public static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHealthChecks();
+        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Microservices.Common.Http_Clients_Registration;
-using Microservices.Common.Models;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microservices.Common.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

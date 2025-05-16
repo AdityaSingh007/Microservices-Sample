@@ -21,7 +21,7 @@ services:
     image: quay.io/keycloak/keycloak
     container_name: microservices-keycloak-identity
     volumes:
-      - C:\Users\SESA670640\Desktop\realm-import:/opt/keycloak/data/import
+      - ./Identity-Realm-Import:/opt/keycloak/data/import
       - ./Https-Certificates/localhost.crt:/opt/keycloak/conf/server.crt
       - ./Https-Certificates/localhost.key:/opt/keycloak/conf/server.key
     command: start --import-realm
@@ -86,7 +86,42 @@ services:
     volumes:
       - C:\Users\SESA670640\Desktop\microservice_data\mssql-init.sql:/tmp/mssql-init.sql
     networks:
-      - my-network 
+      - my-network
+      
+  microservice-identity:
+    image: ${DOCKER_REGISTRY-}microservice-identity:latest
+    container_name: microservice-identity
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: microservice.identity/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://*:8080/;https://*:8081/
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${ASPNETCORE_Kestrel_Certificates_Default_Password}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_ENVIRONMENT=Production
+      - LoggingParameters__LoggingUrl=https://es01:9200
+      - LoggingParameters__ElasticUserName=elastic
+      - LoggingParameters__ElasticPassword=${ELASTIC_PASSWORD}
+    ports:
+      - "7158:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - $USERPROFILE\.aspnet\https:/https/
+
+    depends_on:
+        keycloak:
+          condition: service_healthy
+
+    healthcheck:
+     test: ["CMD-SHELL","curl --insecure -s -I https://microservice-identity:8081/health/live"]
+     interval: 30s
+     timeout: 5s
+     retries: 120
+    networks:
+      - my-network    
        
   microservice1:
     image: ${DOCKER_REGISTRY-}microservice1:latest

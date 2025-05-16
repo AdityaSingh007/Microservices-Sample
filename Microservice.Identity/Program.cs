@@ -1,6 +1,8 @@
 using Duende.Bff.Yarp;
+using Microservices.Common;
 using Microservices.Shared;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,8 @@ builder.Configuration.AddJsonFile(
         optional: false,
         reloadOnChange: true
      ).AddEnvironmentVariables();
+
+builder.Host.UseSerilog(Logging.ConfigureLogger);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -56,6 +60,8 @@ builder.Services.AddRoleClaimsTransformation();
 
 builder.Services.AddAuthorization();
 
+builder.Services.ConfigureHealthChecks(builder.Configuration);
+
 var app = builder.Build();
 
 app.UseDefaultFiles();
@@ -71,6 +77,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.AddMicroserviceRequestLogging();
+
 // Comment this in to use the external api
 app.MapRemoteBffApiEndpoint("/api", app.Configuration["RemoteBffApiEndpoint"])
    .RequireAccessToken(Duende.Bff.TokenType.User);
@@ -78,4 +86,5 @@ app.MapRemoteBffApiEndpoint("/api", app.Configuration["RemoteBffApiEndpoint"])
 app.MapFallbackToFile("/index.html");
 
 app.UseHttpsRedirection();
+app.MapServiceHealthChecks();
 app.Run();
