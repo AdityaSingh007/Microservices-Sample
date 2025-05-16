@@ -14,5 +14,6 @@
     <None Include=".dockerignore" />
     <None Include="Https-Certificates\localhost.crt" />
     <None Include="Https-Certificates\localhost.key" />
+    <None Include="Identity-Realm-Import\microservices-identity-realm.json" />
   </ItemGroup>
 </Project>

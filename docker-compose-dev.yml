@@ -18,7 +18,7 @@ services:
     image: quay.io/keycloak/keycloak
     container_name: microservices-keycloak-identity
     volumes:
-      - C:\Users\SESA670640\Desktop\realm-import:/opt/keycloak/data/import
+      - ./Identity-Realm-Import:/opt/keycloak/data/import
       - ./Https-Certificates/localhost.crt:/opt/keycloak/conf/server.crt
       - ./Https-Certificates/localhost.key:/opt/keycloak/conf/server.key
     command: start-dev --import-realm
@@ -39,4 +39,8 @@ services:
     ports:
       - ${KEYCLOAK_HTTPS_SERVER_PORT}:${KEYCLOAK_HTTPS_SERVER_PORT}
     depends_on:
-      - postgres  
+      - postgres
+
+networks:
+  "my-network":
+    driver: bridge 

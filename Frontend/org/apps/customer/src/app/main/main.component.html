@@ -1,0 +1,76 @@
+<mat-tab-group>
+  <mat-tab label="Customer-Details">
+    <div style="display: flex; align-items: center">
+      <form class="example-form" style="margin-top: 10px; margin-bottom: 0">
+        <mat-form-field
+          class="example-full-width"
+          style="width: 500px; margin-bottom: 0"
+        >
+          <mat-label>Customer Id</mat-label>
+          <input matInput [(ngModel)]="customerId" name="customerId" />
+        </mat-form-field>
+      </form>
+      <div style="margin-left: 16px">
+        <button mat-raised-button (click)="getCustomerDetails()">
+          Details
+        </button>
+      </div>
+    </div>
+    <div>
+      @if (this.customerDetails) {
+      <mat-list>
+        <mat-list-item
+          >FirstName - {{ this.customerDetails.firstName }}</mat-list-item
+        >
+        <mat-list-item
+          >LastName - {{ this.customerDetails.lastName }}</mat-list-item
+        >
+        <mat-list-item
+          >CreatedAt - {{ this.customerDetails.created }}</mat-list-item
+        >
+      </mat-list>
+      }
+    </div>
+  </mat-tab>
+  <mat-tab label="Create-Customer">
+    <mat-card appearance="outlined" style="display: flex; align-items: center">
+      <mat-card-content>
+        <form>
+          <div>
+            <mat-form-field>
+              <mat-label>First Name</mat-label>
+              <input
+                matInput
+                [(ngModel)]="firstName"
+                name="firstName"
+                required
+              />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <mat-label>Last Name</mat-label>
+              <input matInput [(ngModel)]="lastName" name="lastName" required />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <mat-label>Email</mat-label>
+              <input matInput [(ngModel)]="email" name="email" required />
+            </mat-form-field>
+          </div>
+        </form>
+        @if (this.canCreateCustomer()) {
+        <div style="margin-left: 14px">
+          <button mat-raised-button (click)="createCustomer()">
+            Create-Customer
+          </button>
+        </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>
+@if(this.loading){
+<mat-spinner></mat-spinner>
+}

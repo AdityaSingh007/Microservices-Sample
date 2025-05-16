@@ -1,0 +1,34 @@
+{
+  "name": "common",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "common/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "project": "common/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "common/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "common/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@angular-devkit/build-angular:karma",
+      "options": {
+        "tsConfig": "common/tsconfig.spec.json",
+        "polyfills": [
+          "zone.js",
+          "zone.js/testing"
+        ]
+      }
+    }
+  }
+}

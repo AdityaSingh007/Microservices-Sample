@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@org/common": ["common/src/public-api.ts"],
       "account/Routes": ["apps/account/src/app/remote-entry/entry.routes.ts"],
       "customer/Routes": ["apps/customer/src/app/remote-entry/entry.routes.ts"],
       "login/Routes": ["apps/login/src/app/remote-entry/entry.routes.ts"],

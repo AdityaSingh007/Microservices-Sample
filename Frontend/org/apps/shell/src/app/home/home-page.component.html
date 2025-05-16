@@ -6,8 +6,12 @@
       micro-frontends.
     </h1>
     <br />
+    @if (this.session() && this.isAuthenticated()) {
+    <h2 style="color: yellowgreen">You are logged in.</h2>
+    } @else {
     <h2 style="color: yellowgreen">
       Please log in to take a tour of the demo app.
     </h2>
+    }
   </mat-card-content>
 </mat-card>

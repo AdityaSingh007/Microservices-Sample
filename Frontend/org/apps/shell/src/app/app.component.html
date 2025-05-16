@@ -10,37 +10,40 @@
       fontIcon="home"
     ></mat-icon
   ></a>
-  @if (isAuthenticated) {
+  @if (this.isAuthenticated()) {
   <a mat-button routerLink="/customer">Customer</a>
   <a mat-button routerLink="/transaction">Transaction</a>
   <a mat-button routerLink="/account">Account</a>
   }
   <span class="example-spacer"></span>
-  @if (!isAuthenticated) {
-  <button mat-button (click)="login()">
+  @if (!this.isAuthenticated()) {
+  <a mat-button href="/bff/login">
     <mat-icon
       aria-hidden="false"
       aria-label="Example login icon"
       fontIcon="login"
     ></mat-icon>
     Login
-  </button>
+  </a>
   } @else {
-  <button mat-button (click)="logout()">
+  <a mat-button [href]="logoutUrl()">
     <mat-icon
       aria-hidden="false"
       aria-label="Example logout icon"
       fontIcon="logout"
     ></mat-icon>
     Logout
-  </button>
-  <button mat-button>
+  </a>
+  <button mat-button [matMenuTriggerFor]="menu">
     <mat-icon
       aria-hidden="false"
       aria-label="Example account icon"
       fontIcon="account_circle"
     ></mat-icon>
     Account
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>{{ this.username() }}</button>
+    </mat-menu>
   </button>
   }
 </mat-toolbar>

@@ -108,5 +108,6 @@ Global
 		Microservices.Shared\Microservices.Shared.projitems*{50e139a7-0a12-471c-b27d-034af6324c73}*SharedItemsImports = 5
 		Microservices.Shared\Microservices.Shared.projitems*{792ff196-50cc-4c11-8e7a-4c0d63e20020}*SharedItemsImports = 5
 		Microservices.Shared\Microservices.Shared.projitems*{90d97c86-33d1-4f16-9ca7-02b1df41a604}*SharedItemsImports = 5
+		Microservices.Shared\Microservices.Shared.projitems*{c51a362b-3d19-4056-a64d-d75022ae6dc3}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

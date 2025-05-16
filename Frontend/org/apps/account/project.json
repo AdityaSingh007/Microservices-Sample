@@ -8,12 +8,16 @@
   "targets": {
     "build": {
       "executor": "@nx/angular:webpack-browser",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/account",
         "index": "apps/account/src/index.html",
         "main": "apps/account/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/account/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -22,7 +26,9 @@
             "input": "apps/account/public"
           }
         ],
-        "styles": ["apps/account/src/styles.scss"],
+        "styles": [
+          "apps/account/src/styles.scss"
+        ],
         "scripts": [],
         "customWebpackConfig": {
           "path": "apps/account/webpack.config.ts"
@@ -62,14 +68,17 @@
       "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4204,
-        "publicHost": "http://localhost:4204"
+        "publicHost": "https://localhost:4204"
       },
       "configurations": {
         "production": {
           "buildTarget": "account:build:production"
         },
         "development": {
-          "buildTarget": "account:build:development"
+          "buildTarget": "account:build:development",
+          "ssl": true,
+          "sslKey": "./certs/localhost.key",
+          "sslCert": "./certs/localhost.crt"
         }
       },
       "defaultConfiguration": "development"
@@ -85,7 +94,9 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/account/jest.config.ts"
       }
