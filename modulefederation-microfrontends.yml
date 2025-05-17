@@ -1,0 +1,86 @@
+name: microfrontend-containers
+
+services:
+#----------------------------------------------------------------
+  app-shell:
+    image: ${DOCKER_REGISTRY-}app-shell:1.0.0
+    build: 
+      context: ./frontend/ORG
+      dockerfile: apps/shell/Dockerfile
+    container_name: app-shell
+    restart: on-failure
+    expose:
+      - '4200'
+    ports:
+      - "4200:81"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+  app-customer:
+    image: ${DOCKER_REGISTRY-}app-customer:1.0.0
+    build: 
+      context: ./frontend/ORG
+      dockerfile: apps/customer/Dockerfile
+    container_name: app-customer
+    restart: on-failure
+    expose:
+      - '4202'
+    ports:
+      - "4202:81"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+  app-transaction:
+    image: ${DOCKER_REGISTRY-}app-transaction:1.0.0
+    build: 
+      context: ./frontend/ORG
+      dockerfile: apps/transaction/Dockerfile
+    container_name: app-transaction
+    restart: on-failure
+    expose:
+      - '4203'
+    ports:
+      - "4203:81"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+  app-account:
+    image: ${DOCKER_REGISTRY-}app-account:1.0.0
+    build: 
+      context: ./frontend/ORG
+      dockerfile: apps/account/Dockerfile
+    container_name: app-account
+    restart: on-failure
+    expose:
+      - '4204'
+    ports:
+      - "4204:81"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+  app-login:
+    image: ${DOCKER_REGISTRY-}app-login:1.0.0
+    build: 
+      context: ./frontend/ORG
+      dockerfile: apps/login/Dockerfile
+    container_name: app-login
+    restart: on-failure
+    expose:
+      - '4201'
+    ports:
+      - "4201:81"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+  app-common:
+    image: ${DOCKER_REGISTRY-}app-common:1.0.0
+    build: 
+      context: ./frontend/ORG
+      dockerfile: common/Dockerfile
+    container_name: app-common
+    restart: on-failure
+    networks:
+      - modulefederation-network
+      
+networks:
+  modulefederation-network:
