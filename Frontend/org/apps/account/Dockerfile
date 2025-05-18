@@ -3,9 +3,11 @@ WORKDIR /app
 COPY . .
 
 RUN npm update -g npm
+RUN npm config rm proxy
+RUN npm config rm https-proxy
 RUN npm config set strict-ssl false
 RUN npm install -g @nrwl/cli
-RUN npm install --force
+RUN npm install --loglevel verbose --force
 RUN npx nx build account --configuration=production
 #RUN pwd && ls
 
