@@ -72,7 +72,10 @@
       },
       "configurations": {
         "production": {
-          "buildTarget": "transaction:build:production"
+          "buildTarget": "transaction:build:production",
+          "ssl": true,
+          "sslKey": "./certs/localhost.key",
+          "sslCert": "./certs/localhost.crt"
         },
         "development": {
           "buildTarget": "transaction:build:development",

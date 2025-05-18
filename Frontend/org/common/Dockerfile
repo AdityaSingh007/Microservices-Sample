@@ -1,8 +1,10 @@
-FROM node:latest as node
+FROM node:latest as builder
 WORKDIR /app
 COPY . .
 
 #stage 2
-FROM nginx:alpine
+FROM nginx:latest
+EXPOSE 80
+EXPOSE 443
 COPY ./common/nginx.conf /etc/nginx/nginx.conf
-COPY --from=node app/common /usr/share/nginx/html
+COPY --from=builder app/dist/common /usr/share/nginx/html

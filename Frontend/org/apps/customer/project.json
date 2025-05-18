@@ -72,7 +72,10 @@
       },
       "configurations": {
         "production": {
-          "buildTarget": "customer:build:production"
+          "buildTarget": "customer:build:production",
+          "ssl": true,
+          "sslKey": "./certs/localhost.key",
+          "sslCert": "./certs/localhost.crt"
         },
         "development": {
           "buildTarget": "customer:build:development",
