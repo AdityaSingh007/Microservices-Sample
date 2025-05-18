@@ -6,6 +6,7 @@ COPY . /usr/src/app
 
 
 RUN npm update -g npm
+RUN npm cache clear --force
 RUN npm config rm proxy
 RUN npm config rm https-proxy
 RUN npm config set strict-ssl false
