@@ -1,4 +1,4 @@
-FROM node:latest AS builder
+FROM node:alpine AS builder
 WORKDIR /app
 COPY . .
 
