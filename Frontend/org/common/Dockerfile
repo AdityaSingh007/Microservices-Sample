@@ -1,4 +1,4 @@
-FROM node:latest as builder
+FROM node:latest AS builder
 WORKDIR /app
 COPY . .
 
@@ -6,5 +6,5 @@ COPY . .
 FROM nginx:latest
 EXPOSE 80
 EXPOSE 443
-COPY ./common/nginx.conf /etc/nginx/nginx.conf
-COPY --from=builder app/dist/common /usr/share/nginx/html
+COPY ./common/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder app/dist/common /usr/nginx/html

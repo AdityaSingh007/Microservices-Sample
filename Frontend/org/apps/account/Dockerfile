@@ -1,4 +1,5 @@
-FROM node:latest as builder
+FROM node:alpine AS builder
+# stage 1
 WORKDIR /app
 COPY . .
 
@@ -7,7 +8,7 @@ RUN npm config rm proxy
 RUN npm config rm https-proxy
 RUN npm config set strict-ssl false
 RUN npm install -g @nrwl/cli
-RUN npm install --loglevel verbose --force
+RUN npm install --force
 RUN npx nx build account --configuration=production
 #RUN pwd && ls
 
@@ -15,5 +16,5 @@ RUN npx nx build account --configuration=production
 FROM nginx:latest
 EXPOSE 80
 EXPOSE 443
-COPY ./apps/account/nginx.conf /etc/nginx/nginx.conf
-COPY --from=builder app/dist/apps/account /usr/share/nginx/html
+COPY ./apps/account/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder app/dist/apps/account /usr/nginx/html
