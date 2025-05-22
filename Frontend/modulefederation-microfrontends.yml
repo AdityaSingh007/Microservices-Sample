@@ -16,9 +16,7 @@ services:
       - "4200"
     ports:
       - "4200:443"
-      - 443:443
     depends_on:
-      - app-common
       - app-login
       - app-transaction
       - app-account
@@ -34,14 +32,13 @@ services:
       dockerfile: apps/customer/Dockerfile
     container_name: app-customer
     volumes:
-      - ./Https-Certificates/localhost.crt:/etc/nginx/certs
-      - ./Https-Certificates/localhost.key:/etc/nginx/certs
+      - ./Https-Certificates/localhost.crt:/etc/ssl/certs/localhost.crt
+      - ./Https-Certificates/localhost.key:/etc/ssl/private/localhost.key
     restart: on-failure
     expose:
       - "4202"
     ports:
       - "4202:443"
-      - "443:443"
     networks:
       - modulefederation-network
   #----------------------------------------------------------------
@@ -52,14 +49,13 @@ services:
       dockerfile: apps/transaction/Dockerfile
     container_name: app-transaction
     volumes:
-      - ./Https-Certificates/localhost.crt:/etc/nginx/certs
-      - ./Https-Certificates/localhost.key:/etc/nginx/certs
+      - ./Https-Certificates/localhost.crt:/etc/ssl/certs/localhost.crt
+      - ./Https-Certificates/localhost.key:/etc/ssl/private/localhost.key
     restart: on-failure
     expose:
       - "4203"
     ports:
       - "4203:443"
-      - "443:443"
     networks:
       - modulefederation-network
   #----------------------------------------------------------------
@@ -70,14 +66,13 @@ services:
       dockerfile: apps/account/Dockerfile
     container_name: app-account
     volumes:
-      - ./Https-Certificates/localhost.crt:/etc/nginx/certs
-      - ./Https-Certificates/localhost.key:/etc/nginx/certs
+      - ./Https-Certificates/localhost.crt:/etc/ssl/certs/localhost.crt
+      - ./Https-Certificates/localhost.key:/etc/ssl/private/localhost.key
     restart: on-failure
     expose:
       - "4204"
     ports:
       - "4204:443"
-      - "443:443"
     networks:
       - modulefederation-network
   #----------------------------------------------------------------
@@ -88,26 +83,25 @@ services:
       dockerfile: apps/login/Dockerfile
     container_name: app-login
     volumes:
-      - ./Https-Certificates/localhost.crt:/etc/nginx/certs
-      - ./Https-Certificates/localhost.key:/etc/nginx/certs
+      - ./Https-Certificates/localhost.crt:/etc/ssl/certs/localhost.crt
+      - ./Https-Certificates/localhost.key:/etc/ssl/private/localhost.key
     restart: on-failure
     expose:
       - "4201"
     ports:
       - "4201:443"
-      - "443:443"
     networks:
       - modulefederation-network
   #----------------------------------------------------------------
-  app-common:
-    image: ${DOCKER_REGISTRY-}app-common:1.0.0
-    build:
-      context: ./ORG
-      dockerfile: common/Dockerfile
-    container_name: app-common
-    restart: on-failure
-    networks:
-      - modulefederation-network
+  # app-common:
+  #   image: ${DOCKER_REGISTRY-}app-common:1.0.0
+  #   build:
+  #     context: ./ORG
+  #     dockerfile: common/Dockerfile
+  #   container_name: app-common
+  #   restart: on-failure
+  #   networks:
+  #     - modulefederation-network
 
 networks:
   modulefederation-network:
