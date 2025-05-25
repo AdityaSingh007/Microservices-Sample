@@ -60,7 +60,7 @@ builder.Services.AddAuthentication(options =>
         OnRedirectToIdentityProvider = context =>
          {
              // Ensure the redirect URI is set correctly for BFF
-             //context.ProtocolMessage.RedirectUri = context.Request.Scheme + "://" + "host.docker.internal:4200" + "/bff/signin-oidc";
+             context.ProtocolMessage.RedirectUri = context.Request.Scheme + "://" + "localhost:4200" + "/bff/signin-oidc";
              Console.WriteLine($"Redirect URI: {context.ProtocolMessage.RedirectUri}");
              return Task.CompletedTask;
          },
