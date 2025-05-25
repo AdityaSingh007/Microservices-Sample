@@ -1,15 +1,11 @@
-FROM node:alpine AS builder
+FROM node:latest AS builder
 # stage 1
 WORKDIR /app
 COPY . .
 
-
-RUN npm update -g npm
-RUN npm config rm proxy
-RUN npm config rm https-proxy
-RUN npm config set strict-ssl false
+RUN rm -rf node_modules
+RUN npm install --verbose --force
 RUN npm install -g @nrwl/cli
-RUN npm install --force
 RUN npx nx build transaction --configuration=production
 #RUN pwd && ls
 

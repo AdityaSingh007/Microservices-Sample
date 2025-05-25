@@ -46,11 +46,22 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("profile");
     options.Scope.Add("offline_access");
     options.Scope.Add("ApiGateway_Fullaccess");
+    options.BackchannelHttpHandler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+    };
     options.Events = new OpenIdConnectEvents
     {
         OnTokenResponseReceived = context =>
          {
              var tokenResponse = context.TokenEndpointResponse;
+             return Task.CompletedTask;
+         },
+        OnRedirectToIdentityProvider = context =>
+         {
+             // Ensure the redirect URI is set correctly for BFF
+             //context.ProtocolMessage.RedirectUri = context.Request.Scheme + "://" + "host.docker.internal:4200" + "/bff/signin-oidc";
+             Console.WriteLine($"Redirect URI: {context.ProtocolMessage.RedirectUri}");
              return Task.CompletedTask;
          },
     };

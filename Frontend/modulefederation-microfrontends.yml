@@ -7,6 +7,7 @@ services:
     build:
       context: ./ORG
       dockerfile: apps/shell/Dockerfile
+      network: host
     container_name: app-shell
     volumes:
       - ./Https-Certificates/localhost.crt:/etc/ssl/certs/localhost.crt
@@ -30,6 +31,7 @@ services:
     build:
       context: ./ORG
       dockerfile: apps/customer/Dockerfile
+      network: host
     container_name: app-customer
     volumes:
       - ./Https-Certificates/localhost.crt:/etc/ssl/certs/localhost.crt
@@ -47,6 +49,7 @@ services:
     build:
       context: ./ORG
       dockerfile: apps/transaction/Dockerfile
+      network: host
     container_name: app-transaction
     volumes:
       - ./Https-Certificates/localhost.crt:/etc/ssl/certs/localhost.crt
@@ -64,6 +67,7 @@ services:
     build:
       context: ./ORG
       dockerfile: apps/account/Dockerfile
+      network: host
     container_name: app-account
     volumes:
       - ./Https-Certificates/localhost.crt:/etc/ssl/certs/localhost.crt
@@ -81,6 +85,7 @@ services:
     build:
       context: ./ORG
       dockerfile: apps/login/Dockerfile
+      network: host
     container_name: app-login
     volumes:
       - ./Https-Certificates/localhost.crt:/etc/ssl/certs/localhost.crt
