@@ -73,7 +73,7 @@ namespace Gateway.api.ApiGatewayTransform
                         {
                             AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(tokenResponse.ExpiresIn)
                         });
-
+                        Console.WriteLine($"ExchangedToken: {tokenResponse.AccessToken}");
                         transformContext.ProxyRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
                     }
                 }

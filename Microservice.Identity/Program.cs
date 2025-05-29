@@ -1,4 +1,7 @@
+using Duende.Bff;
 using Duende.Bff.Yarp;
+using Elastic.CommonSchema;
+using Microservice.Identity.Infrastructure;
 using Microservices.Common;
 using Microservices.Shared;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -20,6 +23,15 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddBff()
     .AddRemoteApis();
+
+builder.Services.AddReverseProxy()
+                .AddBffExtensions()
+                .ConfigureHttpClient((context, handler) =>
+                {
+                    handler.SslOptions.RemoteCertificateValidationCallback = (message, cert, chain, errors) => true;
+                });
+
+builder.Services.AddTransient<IReturnUrlValidator, FrontEndUrlValidator>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -60,7 +72,7 @@ builder.Services.AddAuthentication(options =>
         OnRedirectToIdentityProvider = context =>
          {
              // Ensure the redirect URI is set correctly for BFF
-             context.ProtocolMessage.RedirectUri = context.Request.Scheme + "://" + "localhost:4200" + "/bff/signin-oidc";
+             //context.ProtocolMessage.RedirectUri = context.Request.Scheme + "://" + "localhost:4200" + "/bff/signin-oidc";
              Console.WriteLine($"Redirect URI: {context.ProtocolMessage.RedirectUri}");
              return Task.CompletedTask;
          },

@@ -103,6 +103,7 @@ services:
       - LoggingParameters__LoggingUrl=https://es01:9200
       - LoggingParameters__ElasticUserName=elastic
       - LoggingParameters__ElasticPassword=${ELASTIC_PASSWORD}
+      - OIDC__Authority=https://${Hostname}:${Port}/auth/realms/MicroserviceIdentity
     ports:
       - "7158:8081"
     volumes:
