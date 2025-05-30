@@ -44,14 +44,26 @@ namespace Gateway.api.ApiGatewayTransform
                     if (!string.IsNullOrWhiteSpace(token))
                     {
                         using var client = httpClientFactory.CreateClient(HttpClientConstants.DefaultHttpClientName);
+
                         var discoveryDocument = await client.GetDiscoveryDocumentAsync(options.Value.Authority);
 
                         if (discoveryDocument.IsError)
                             throw new Exception(discoveryDocument.Error);
 
+                        var apiGatewayTokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest()
+                        {
+                            Address = discoveryDocument.TokenEndpoint,
+                            ClientId = options.Value.ClientId,
+                            ClientSecret = options.Value.ClientSecret,
+                            Scope = "ApiGateway_Fullaccess"
+                        });
+
+                        if (apiGatewayTokenResponse.IsError)
+                            throw new Exception(apiGatewayTokenResponse.Error);
+
                         var tokenExchangeParams = new Parameters()
                     {
-                            { "subject_token", token! },
+                            { "subject_token", apiGatewayTokenResponse.AccessToken! },
                             { "subject_token_type", "urn:ietf:params:oauth:token-type:access_token" }
                     };
 
@@ -63,7 +75,7 @@ namespace Gateway.api.ApiGatewayTransform
                             Parameters = tokenExchangeParams,
                             GrantType = "urn:ietf:params:oauth:grant-type:token-exchange",
                             Scope = options.Value.TokenExchangeScope ?? string.Empty,
-                            Audience = options.Value.TokenExchangeAudience ?? string.Empty
+                            RequestedTokenType = "urn:ietf:params:oauth:token-type:access_token"
                         });
 
                         if (tokenResponse.IsError)
@@ -73,7 +85,6 @@ namespace Gateway.api.ApiGatewayTransform
                         {
                             AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(tokenResponse.ExpiresIn)
                         });
-                        Console.WriteLine($"ExchangedToken: {tokenResponse.AccessToken}");
                         transformContext.ProxyRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
                     }
                 }

@@ -1,21 +1,21 @@
 include:
   - docker-compose-dev-logging.yml
 
-name: microservices-containers-identity
+name: Dev-backend-containers
 
 services:
   postgres:
     image: postgres
     container_name: microservices-identity-database
     volumes:
-      - C:\Users\Singh\OneDrive\Desktop\postrges_data:/var/lib/postgresql/data
+      - ${APPDATA}\Postrges_Data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
   keycloak:
-    image: quay.io/keycloak/keycloak
+    image: quay.io/keycloak/keycloak:26.2.4
     container_name: microservices-keycloak-identity
     volumes:
       - ./Identity-Realm-Import:/opt/keycloak/data/import
@@ -40,6 +40,38 @@ services:
       - ${KEYCLOAK_HTTPS_SERVER_PORT}:${KEYCLOAK_HTTPS_SERVER_PORT}
     depends_on:
       - postgres
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    hostname: microservices-sqlserver
+    container_name: microservices-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - ${APPDATA}\Microservice_Data\data:/var/opt/mssql/data
+      - ${APPDATA}\Microservice_Data\log:/var/opt/mssql/log
+      - ${APPDATA}\Microservice_Data\secrets:/var/opt/mssql/secrets
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S microservices-sqlserver -U sa -P "${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -b -o /dev/null
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    networks:
+      - my-network
+
+  mssql-tools:
+    image: mcr.microsoft.com/mssql-tools:latest
+    restart: on-failure
+    command: "/opt/mssql-tools/bin/sqlcmd -S microservices-sqlserver -l 60 -U sa -P '${MSSQL_SA_PASSWORD}' -d master -i /tmp/mssql-init.sql"
+    depends_on:
+      - sqlserver
+    volumes:
+      - ${APPDATA}\Microservice_Data\mssql-init.sql:/tmp/mssql-init.sql
+    networks:
+      - my-network
 
 networks:
   "my-network":
