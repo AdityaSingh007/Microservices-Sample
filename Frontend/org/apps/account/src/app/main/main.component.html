@@ -1,0 +1,15 @@
+<mat-tab-group>
+  <mat-tab label="Create-Account">
+    <app-create-account (isLoading)="loading = $event"></app-create-account>
+  </mat-tab>
+  <mat-tab label="Transaction">
+    <mat-card appearance="outlined" style="display: flex; align-items: center">
+      <mat-card-content>
+        <app-account-transaction></app-account-transaction>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>
+@if(this.loading){
+<mat-spinner></mat-spinner>
+}

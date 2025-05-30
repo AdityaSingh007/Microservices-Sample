@@ -1,0 +1,17 @@
+<form class="example-form" style="margin-top: 10px; margin-bottom: 0">
+        <mat-form-field
+          class="example-full-width"
+          style="width: 500px; margin-bottom: 0"
+        >
+          <mat-label>Customer Id</mat-label>
+          <input matInput [(ngModel)]="customerId" name="customerId" />
+        </mat-form-field>
+      </form>
+            <div style="margin-left: 16px">
+        <button mat-raised-button (click)="createAccount()">
+          Create-Account
+        </button>
+      </div>
+      <div>
+        <h3>{{accountId}}</h3>
+      </div>

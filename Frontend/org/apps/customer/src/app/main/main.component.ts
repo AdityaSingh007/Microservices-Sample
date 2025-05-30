@@ -54,7 +54,9 @@ export class MainComponent implements OnDestroy {
         },
         error: (error) => {
           console.error('Error fetching customer details:', error);
-          this._snackBar.open('Error occurred', 'Undo');
+          this._snackBar.open('Error occurred', 'Undo', {
+            duration: 2000,
+          });
           this.loading = false;
         },
       });
