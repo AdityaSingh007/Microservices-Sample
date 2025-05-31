@@ -5,7 +5,7 @@
   <mat-tab label="Transaction">
     <mat-card appearance="outlined" style="display: flex; align-items: center">
       <mat-card-content>
-        <app-account-transaction></app-account-transaction>
+        <app-account-transaction (isLoading)="loading = $event"></app-account-transaction>
       </mat-card-content>
     </mat-card>
   </mat-tab>

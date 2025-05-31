@@ -11,9 +11,9 @@
     ></mat-icon
   ></a>
   @if (this.isAuthenticated()) {
-  <a mat-button routerLink="/customer">Customer</a>
-  <a mat-button routerLink="/transaction">Transaction</a>
-  <a mat-button routerLink="/account">Account</a>
+  <a mat-button routerLink="/customer" routerLinkActive="active">Customer</a>
+  <a mat-button routerLink="/transaction" routerLinkActive="active">Transaction</a>
+  <a mat-button routerLink="/account" routerLinkActive="active">Account</a>
   }
   <span class="example-spacer"></span>
   @if (!this.isAuthenticated()) {

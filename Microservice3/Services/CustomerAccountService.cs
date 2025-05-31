@@ -97,7 +97,7 @@ namespace Microservice3.Services
                     logger.LogError("Invalid account Id.");
                     throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid account Id."));
                 }
-
+               
                 var account = await accountRepository.GetByIdAsync(accountId);
 
                 if (account == null)
@@ -106,7 +106,8 @@ namespace Microservice3.Services
                     throw new RpcException(new Status(StatusCode.NotFound, "Account not found."));
                 }
 
-                account.Balance += Convert.ToDecimal(request.Amount);
+                decimal amount = 0;
+                account.Balance += Decimal.TryParse(request.Amount, out amount) ? amount:throw new InvalidDataException(nameof(request.Amount));
 
                 await accountRepository.UpdateAsync(account);
 

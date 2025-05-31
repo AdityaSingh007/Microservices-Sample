@@ -1,1 +1,39 @@
-<p>account-transaction works!</p>
+<mat-card appearance="outlined" style="display: flex; align-items: center">
+      <mat-card-content>
+        <form>
+          <div>
+            <mat-form-field [style.width.px]=350>
+              <mat-label>CustomerId</mat-label>
+              <input
+                matInput
+                [(ngModel)]="customerId"
+                name="customerId"
+                required
+              />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field [style.width.px]=350>
+              <mat-label>AccountId</mat-label>
+              <input matInput [(ngModel)]="accountId" name="accountId" required />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <mat-label>TransactionAmount</mat-label>
+              <input matInput [(ngModel)]="transactionAmount" name="transactionAmount" required />
+            </mat-form-field>
+          </div>
+        </form>
+        @if (this.canPerformTransaction()) {
+        <div style="margin-left: 14px">
+          <button mat-raised-button (click)="performTransaction('deposit')">
+            Add
+          </button>
+          <button mat-raised-button (click)="performTransaction('withdraw')" style="margin-left: 5px;">
+            Withdraw
+          </button>
+        </div>
+        }
+      </mat-card-content>
+    </mat-card>
