@@ -1,7 +1,7 @@
 include:
   - docker-compose-dev-logging.yml
 
-name: microservices-containers
+name: backend-containers
 
 services:
 
