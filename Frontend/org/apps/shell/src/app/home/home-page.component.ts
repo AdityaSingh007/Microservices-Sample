@@ -1,7 +1,11 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, effect, inject, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { AuthenticationService, Session } from '@org/common';
+import {
+  AuthenticationService,
+  NotificationService,
+  Session,
+} from '@org/common';
 
 @Component({
   selector: 'app-home-page',
@@ -12,6 +16,7 @@ import { AuthenticationService, Session } from '@org/common';
 })
 export class HomePageComponent {
   private readonly auth = inject(AuthenticationService);
+  private readonly notificationService = inject(NotificationService);
   public session: Signal<Session> = this.auth.session;
   public isAuthenticated = this.auth.isAuthenticated;
   public isAnonymous = this.auth.isAnonymous;

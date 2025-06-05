@@ -17,9 +17,10 @@ const PROXY_CONFIG = [
       '/signout-callback-oidc',
 
       // API Routes
-      '/api',
+      '/api'
     ],
     target,
+    ws:true,
     secure: false,
   },
 ];
