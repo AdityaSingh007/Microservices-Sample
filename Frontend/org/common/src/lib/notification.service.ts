@@ -10,11 +10,12 @@ export class NotificationService {
   public notifiy = new BehaviorSubject<string>('');
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('api/transactionHub', {
+      .withUrl('/transactionNotificationHub', {
         headers: {
           'X-CSRF': '1', // Custom header for CSRF protection
         },
       }) // SignalR hub URL
+      .withAutomaticReconnect()
       .build();
   }
 

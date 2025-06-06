@@ -20,9 +20,17 @@ const PROXY_CONFIG = [
       '/api'
     ],
     target,
-    ws:true,
     secure: false,
   },
+  {
+    context: [
+      // signalR hub endpoint
+      '/transactionNotificationHub'
+    ],
+    target,
+    secure: false,
+    ws:true
+  }
 ];
 
 module.exports = PROXY_CONFIG;
