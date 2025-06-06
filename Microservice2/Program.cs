@@ -1,6 +1,5 @@
 using Asp.Versioning;
 using MassTransit;
-using Microservice2.Hubs;
 using Microservice3.AuthorizatioHandlers;
 using Microservice3.AuthorizationHandlers;
 using Microservice3.EventBusConsumer;
@@ -141,6 +140,5 @@ app.RegisterServiceBusMessageEndpoints();
 app.RegisterTransactionApiEndpoints();
 
 app.MapServiceHealthChecks();
-app.MapHub<TransactionNotificationHub>("api/transactionHub");
 
 app.Run();

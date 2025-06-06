@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Communcation.Contracts;
 using MassTransit;
-using Microservice2.Hubs;
 using Microservice3.Domain.Entities;
 using Microservice3.Infrastructure.Repositories.Interface;
 using Microservices.Common.Authorization;
@@ -19,21 +18,21 @@ namespace Microservice3.EventBusConsumer
         private readonly IMapper _mapper;
         private readonly ICustomTokenValidation customTokenValidation;
         private readonly IOptions<ServiceBusAuthenticationOption> options;
-        private readonly IHubContext<TransactionNotificationHub, ITransactionNotificationClient> transactionHubContext;
+        private readonly IPublishEndpoint publishEndpoint;
 
         public AccountTransactionConsumer(ILogger<AccountTransactionConsumer> logger,
             ITransactionRepository transactionRepository,
             IMapper mapper,
             ICustomTokenValidation customTokenValidation,
             IOptions<ServiceBusAuthenticationOption> options,
-            IHubContext<TransactionNotificationHub,ITransactionNotificationClient> transactionHubContext)
+            IPublishEndpoint publishEndpoint)
         {
             _logger = logger;
             _transactionRepository = transactionRepository;
             _mapper = mapper;
             this.customTokenValidation = customTokenValidation;
             this.options = options;
-            this.transactionHubContext = transactionHubContext;
+            this.publishEndpoint = publishEndpoint;
         }
 
         public async Task Consume(ConsumeContext<AccountTransactionEvent> context)
@@ -47,7 +46,7 @@ namespace Microservice3.EventBusConsumer
                     _logger.LogError("Access token is null or empty");
                     return;
                 }
-                var tokenValidationResult = await customTokenValidation.ValidateToken(accessToken, new TokenValidationParameters() 
+                var tokenValidationResult = await customTokenValidation.ValidateToken(accessToken, new TokenValidationParameters()
                 {
                     ValidateAudience = true,
                     ValidateIssuer = true,
@@ -57,23 +56,32 @@ namespace Microservice3.EventBusConsumer
                 if (!tokenValidationResult)
                 {
                     _logger.LogError("Token validation failed");
-                    await transactionHubContext.Clients.All.NotifyTransactionStatus($"Transaction failed for account - {context.Message.AccountId}");
+                    await publishEndpoint.Publish(new SignalRNotificationEvent()
+                    {
+                        message = "Failed to process transaction",
+                    });
                     return;
                 }
                 var transaction = _mapper.Map<Transaction>(context.Message);
                 if (transaction is not null)
                 {
                     await _transactionRepository.Add(transaction);
+                    await publishEndpoint.Publish(new SignalRNotificationEvent()
+                    {
+                        message = $"Processed transaction with id -  {transaction.Id}",
+                    });
                     _logger.LogInformation("Processed transaction with id - {@transactionId}", transaction.Id);
-                    await transactionHubContext.Clients.All.NotifyTransactionStatus($"Processed transaction with id - {transaction.Id}");
                 }
                 else
                     throw new ArgumentNullException(nameof(transaction));
             }
             catch (Exception ex)
             {
+                await publishEndpoint.Publish(new SignalRNotificationEvent()
+                {
+                    message = "Failed to process transaction",
+                });
                 _logger.LogError("Cannot process transaction : Reason - {@reason}", ex.Message.ToString());
-                await transactionHubContext.Clients.All.NotifyTransactionStatus($"Transaction failed for account - {context.Message.AccountId}");
             }
         }
     }

@@ -14,6 +14,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Microservice.Identity/Microservice.Identity.csproj", "Microservice.Identity/"]
+COPY ["Communcation.Contracts/Communcation.Contracts.csproj", "Communcation.Contracts/"]
 COPY ["Microservices.Common/Microservices.Common.csproj", "Microservices.Common/"]
 RUN dotnet restore "./Microservice.Identity/Microservice.Identity.csproj"
 COPY . .

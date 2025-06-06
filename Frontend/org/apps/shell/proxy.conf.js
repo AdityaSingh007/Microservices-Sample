@@ -25,7 +25,7 @@ const PROXY_CONFIG = [
   {
     context: [
       // signalR hub endpoint
-      '/transactionNotificationHub'
+      '/notificationHub'
     ],
     target,
     secure: false,

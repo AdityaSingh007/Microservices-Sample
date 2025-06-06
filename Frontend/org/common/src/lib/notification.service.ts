@@ -10,7 +10,7 @@ export class NotificationService {
   public notifiy = new BehaviorSubject<string>('');
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('/transactionNotificationHub', {
+      .withUrl('https://localhost:7158/notificationHub', {
         headers: {
           'X-CSRF': '1', // Custom header for CSRF protection
         },
@@ -29,7 +29,7 @@ export class NotificationService {
   }
 
   listenForTransactionNotification(): void {
-    this.hubConnection.on('NotifyTransactionStatus', (notification: string) => {
+    this.hubConnection.on('SendNotification', (notification: any) => {
       console.log('Transaction notification received:', notification);
       this.notifiy.next(notification);
     });
