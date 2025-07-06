@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MessageConsumer\**" />
+    <Content Remove="MessageConsumer\**" />
+    <EmbeddedResource Remove="MessageConsumer\**" />
+    <None Remove="MessageConsumer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
@@ -34,7 +41,6 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\Migrations\" />
-    <Folder Include="MessageConsumer\" />
   </ItemGroup>
 
   <ItemGroup>
