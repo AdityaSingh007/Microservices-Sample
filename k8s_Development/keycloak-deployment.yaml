@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    microservices-keycloak-identity-pod: microservices-keycloak-identity
+  name: microservices-keycloak-identity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      microservices-keycloak-identity-pod: microservices-keycloak-identity
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        microservices-keycloak-identity-pod: microservices-keycloak-identity
+    spec:
+      containers:
+        - args:
+            - start-dev
+            - --import-realm
+          env:
+            - name: DB_ADDR
+              value: postgres
+            - name: DB_DATABASE
+              value: keycloak
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: microservices-secrets
+            - name: DB_SCHEMA
+              value: public
+            - name: DB_USER
+              value: keycloak
+            - name: DB_VENDOR
+              value: POSTGRES
+            - name: KC_FEATURES
+              value: preview,token-exchange
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            - name: KC_HTTPS_CERTIFICATE_FILE
+              value: /opt/keycloak/conf/server.crt
+            - name: KC_HTTPS_CERTIFICATE_KEY_FILE
+              value: /opt/keycloak/conf/server.key
+            - name: KC_HTTP_RELATIVE_PATH
+              value: /auth
+            - name: KEYCLOAK_ADMIN
+              value: admin
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: KEYCLOAK_ADMIN_PASSWORD
+                  name: microservices-secrets
+          image: quay.io/keycloak/keycloak:26.2.4
+          name: microservices-keycloak-identity
+          ports:
+            - containerPort: 8443
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/keycloak/data/import
+              name: keycloak-cm0
+            - mountPath: /opt/keycloak/conf/server.crt
+              name: keycloak-cm1
+            - mountPath: /opt/keycloak/conf/server.key
+              name: keycloak-cm2
+      restartPolicy: Always
+      volumes:
+        - name: keycloak-cm0
+          hostPath:
+            path: /mnt/host/kubernetes-mount/Identity-Realm-Import
+            type: "Directory"
+        - name: keycloak-cm1
+          hostPath:
+            path: /mnt/host/kubernetes-mount/Https-Certificates/localhost.crt
+            type: "File"
+        - name: keycloak-cm2
+          hostPath:
+            path: /mnt/host/kubernetes-mount/Https-Certificates/localhost.key
+            type: "File"

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-https-service
+  namespace: elastic-system
+spec:
+  selector:
+    elasticsearch.k8s.elastic.co/cluster-name: elasticsearch-development
+  type: LoadBalancer
+  ports:
+    - name: "9200"
+      port: 9200
+      targetPort: 9200

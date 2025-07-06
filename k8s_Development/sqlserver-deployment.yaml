@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    microservices-sqlserver-pod: microservices-sqlserver
+  name: sqlserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      microservices-sqlserver-pod: microservices-sqlserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        microservices-sqlserver-pod: microservices-sqlserver
+    spec:
+      containers:
+        - env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MSSQL_SA_PASSWORD
+                  name: microservices-secrets
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          securityContext:
+            runAsUser: 0
+          livenessProbe:
+            exec:
+              command:
+                [
+                  "sh",
+                  "-c",
+                  "/opt/mssql-tools18/bin/sqlcmd -C -S microservices-sqlserver -U sa -P ${MSSQL_SA_PASSWORD} -Q 'SELECT 1' -b -o /dev/null",
+                ]
+            initialDelaySeconds: 60
+            failureThreshold: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: microservices-sqlserver
+          ports:
+            - containerPort: 1433
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/opt/mssql/data
+              name: sqlserver-cm0
+            - mountPath: /var/opt/mssql/log
+              name: sqlserver-cm1
+            - mountPath: /var/opt/mssql/secrets
+              name: sqlserver-cm2
+      hostname: microservices-sqlserver
+      restartPolicy: Always
+      volumes:
+        - name: sqlserver-cm0
+          hostPath:
+            path: /mnt/host/kubernetes-mount/data
+            type: "DirectoryOrCreate"
+        - name: sqlserver-cm1
+          hostPath:
+            path: /mnt/host/kubernetes-mount/log
+            type: "DirectoryOrCreate"
+        - name: sqlserver-cm2
+          hostPath:
+            path: /mnt/host/kubernetes-mount/secrets
+            type: "DirectoryOrCreate"

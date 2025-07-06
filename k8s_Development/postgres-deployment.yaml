@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    postgres-pod: postgres
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      postgres-pod: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        postgres-pod: postgres
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: keycloak
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: microservices-secrets
+            - name: POSTGRES_USER
+              value: keycloak
+          image: postgres
+          name: microservices-identity-database
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-cm0
+      restartPolicy: Always
+      volumes:
+        - name: postgres-cm0
+          hostPath:
+            path: /mnt/host/kubernetes-mount/Postgres_Data
+            type: "Directory"
