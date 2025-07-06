@@ -16,6 +16,10 @@ spec:
       labels:
         microservices-sqlserver-pod: microservices-sqlserver
     spec:
+      volumes:
+        - name: sqlserver-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
       containers:
         - env:
             - name: ACCEPT_EULA
@@ -46,23 +50,13 @@ spec:
               protocol: TCP
           volumeMounts:
             - mountPath: /var/opt/mssql/data
-              name: sqlserver-cm0
+              name: sqlserver-pv-storage
+              subPath: data
             - mountPath: /var/opt/mssql/log
-              name: sqlserver-cm1
+              name: sqlserver-pv-storage
+              subPath: log
             - mountPath: /var/opt/mssql/secrets
-              name: sqlserver-cm2
+              name: sqlserver-pv-storage
+              subPath: secrets
       hostname: microservices-sqlserver
       restartPolicy: Always
-      volumes:
-        - name: sqlserver-cm0
-          hostPath:
-            path: /mnt/host/kubernetes-mount/data
-            type: "DirectoryOrCreate"
-        - name: sqlserver-cm1
-          hostPath:
-            path: /mnt/host/kubernetes-mount/log
-            type: "DirectoryOrCreate"
-        - name: sqlserver-cm2
-          hostPath:
-            path: /mnt/host/kubernetes-mount/secrets
-            type: "DirectoryOrCreate"

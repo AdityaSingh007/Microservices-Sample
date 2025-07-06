@@ -16,6 +16,10 @@ spec:
       labels:
         microservices-keycloak-identity-pod: microservices-keycloak-identity
     spec:
+      volumes:
+        - name: keycloak-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
       containers:
         - args:
             - start-dev
@@ -60,22 +64,12 @@ spec:
               protocol: TCP
           volumeMounts:
             - mountPath: /opt/keycloak/data/import
-              name: keycloak-cm0
+              name: keycloak-pv-storage
+              subPath: Identity-Realm-Import
             - mountPath: /opt/keycloak/conf/server.crt
-              name: keycloak-cm1
+              name: keycloak-pv-storage
+              subPath: Https-Certificates/localhost.crt
             - mountPath: /opt/keycloak/conf/server.key
-              name: keycloak-cm2
+              name: keycloak-pv-storage
+              subPath: Https-Certificates/localhost.key
       restartPolicy: Always
-      volumes:
-        - name: keycloak-cm0
-          hostPath:
-            path: /mnt/host/kubernetes-mount/Identity-Realm-Import
-            type: "Directory"
-        - name: keycloak-cm1
-          hostPath:
-            path: /mnt/host/kubernetes-mount/Https-Certificates/localhost.crt
-            type: "File"
-        - name: keycloak-cm2
-          hostPath:
-            path: /mnt/host/kubernetes-mount/Https-Certificates/localhost.key
-            type: "File"

@@ -16,6 +16,10 @@ spec:
       labels:
         postgres-pod: postgres
     spec:
+      volumes:
+        - name: postgresql-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
       containers:
         - env:
             - name: POSTGRES_DB
@@ -31,10 +35,6 @@ spec:
           name: microservices-identity-database
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: postgres-cm0
+              name: postgresql-pv-storage
+              subPath: Postgres_Data
       restartPolicy: Always
-      volumes:
-        - name: postgres-cm0
-          hostPath:
-            path: /mnt/host/kubernetes-mount/Postgres_Data
-            type: "Directory"

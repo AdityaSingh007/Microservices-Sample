@@ -5,6 +5,10 @@ metadata:
     mssql-tools-pod: mssql-tools
   name: mssql-tools
 spec:
+  volumes:
+    - name: mssql-tools-pv-storage
+      persistentVolumeClaim:
+        claimName: local-pv-volume-claim
   containers:
     - env:
         - name: MSSQL_SA_PASSWORD
@@ -22,10 +26,6 @@ spec:
         ]
       volumeMounts:
         - mountPath: /tmp/mssql-init.sql
-          name: mssql-tools-cm0
+          name: mssql-tools-pv-storage
+          subPath: mssql-init.sql
   restartPolicy: OnFailure
-  volumes:
-    - name: mssql-tools-cm0
-      hostPath:
-        path: /mnt/host/kubernetes-mount/mssql-init.sql
-        type: "File"
