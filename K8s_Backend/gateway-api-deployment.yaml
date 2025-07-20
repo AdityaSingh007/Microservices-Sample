@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    gateway-api-pod: gateway-api
+  name: gateway-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      gateway-api-pod: gateway-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        gateway-api-pod: gateway-api
+    spec:
+      volumes:
+        - name: gateway-api-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
+      containers:
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+            - name: ASPNETCORE_HTTPS_PORTS
+              value: "8081"
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-secrets
+                  key: ASPNETCORE_Kestrel__Certificates__Default__Password
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /https/aspnetapp.pfx
+            - name: ASPNETCORE_URLS
+              value: http://*:8080/;https://*:8081/
+            - name: AuthenticationParameters__Authority
+              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity
+            - name: AuthenticationParameters__TokenEndpoint
+              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+          image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/gatewayapi:latest
+          name: gateway-api
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /home/app/.aspnet/https
+              name: gateway-api-pv-storage
+              subPath: ASP.NET/Https
+            - mountPath: /https
+              name: gateway-api-pv-storage
+              subPath: Https
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: acr-secret

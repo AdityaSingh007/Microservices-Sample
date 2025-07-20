@@ -237,9 +237,9 @@ services:
     networks:
       - my-network
 
-  gateway.api:
+  gateway-Api:
     image: ${DOCKER_REGISTRY-}gatewayapi:latest
-    container_name: gatewayApi
+    container_name: gateway-Api
     restart: unless-stopped
     build:
       context: .

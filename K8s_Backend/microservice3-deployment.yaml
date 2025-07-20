@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    microservice3-Pod: microservice3
+  name: microservice3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      microservice3-Pod: microservice3
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        microservice3-Pod: microservice3
+    spec:
+      volumes:
+        - name: microservice3-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
+      containers:
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+            - name: ASPNETCORE_HTTPS_PORTS
+              value: "8081"
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-secrets
+                  key: ASPNETCORE_Kestrel__Certificates__Default__Password
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /https/aspnetapp.pfx
+            - name: ASPNETCORE_URLS
+              value: http://*:8080/;https://*:8081/
+            - name: AuthenticationParameters__Authority
+              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity
+            - name: LoggingParameters__ElasticPassword
+              value: Aditya#123
+            - name: LoggingParameters__ElasticUserName
+              value: elastic
+            - name: LoggingParameters__LoggingUrl
+              value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
+            - name: ServiceBusAuthenticationParameters__Authority
+              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity
+            - name: ServiceBusAuthenticationParameters__TokenEndpoint
+              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+          image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice3:latest
+          imagePullPolicy: IfNotPresent
+          name: microservice3
+          volumeMounts:
+            - mountPath: /home/app/.aspnet/https
+              name: microservice3-pv-storage
+              subPath: ASP.NET/Https
+            - mountPath: /https
+              name: microservice3-pv-storage
+              subPath: Https
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: acr-secret

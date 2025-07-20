@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     microservices-sqlserver-pod: microservices-sqlserver
-  name: sqlserver
+  name: microservices-sqlserver
 spec:
   replicas: 1
   selector:

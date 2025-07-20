@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    microservice-identity-Pod: microservice-identity
+  name: microservice-identity
+spec:
+  type: LoadBalancer
+  ports:
+    - name: "7158"
+      port: 7158
+      targetPort: 8081
+  selector:
+    microservice-identity-Pod: microservice-identity
