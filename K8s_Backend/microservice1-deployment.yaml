@@ -20,6 +20,23 @@ spec:
         - name: microservice1-pv-storage
           persistentVolumeClaim:
             claimName: local-pv-volume-claim
+      initContainers:
+        - name: wait-for-microservices-keycloak-identity
+          image: busybox:latest
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup microservices-keycloak-identity.default.svc.cluster.local; do echo 'waiting for miicroservices-keycloak-identity'; sleep 2; done",
+            ]
+        - name: wait-for-microservices-sqlserver
+          image: busybox:latest
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup microservices-sqlserver.default.svc.cluster.local; do echo 'waiting for microservices-sqlserver'; sleep 2; done",
+            ]
       containers:
         - env:
             - name: ASPNETCORE_ENVIRONMENT
