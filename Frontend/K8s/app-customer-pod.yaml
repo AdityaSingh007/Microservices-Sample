@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app-customer-pod: app-customer
+  name: app-customer
+spec:
+  volumes:
+    - name: app-customer-pv-storage
+      persistentVolumeClaim:
+        claimName: local-pv-volume-claim
+  containers:
+    - image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/frontend/app-customer
+      name: app-customer
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 443
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /etc/ssl/certs/localhost.crt
+          name: app-customer-pv-storage
+          subPath: Https-Frontend-Certificates/localhost.crt
+        - mountPath: /etc/ssl/private/localhost.key
+          name: app-customer-pv-storage
+          subPath: Https-Frontend-Certificates/localhost.key
+  restartPolicy: OnFailure
+  imagePullSecrets:
+    - name: acr-secret

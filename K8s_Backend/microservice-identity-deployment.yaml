@@ -59,7 +59,7 @@ spec:
             - name: LoggingParameters__LoggingUrl
               value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
             - name: OIDC__Authority
-              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity
+              value: https://192.168.31.73:30000/auth/realms/MicroserviceIdentity
           image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice-identity:latest
           name: microservice-identity
           imagePullPolicy: IfNotPresent

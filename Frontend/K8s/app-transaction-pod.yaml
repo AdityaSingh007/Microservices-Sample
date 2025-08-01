@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app-transaction-pod: app-transaction
+  name: app-transaction
+spec:
+  volumes:
+    - name: app-transaction-pv-storage
+      persistentVolumeClaim:
+        claimName: local-pv-volume-claim
+  containers:
+    - image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/frontend/app-transaction
+      name: app-transaction
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 443
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /etc/ssl/certs/localhost.crt
+          name: app-transaction-pv-storage
+          subPath: Https-Frontend-Certificates/localhost.crt
+        - mountPath: /etc/ssl/private/localhost.key
+          name: app-transaction-pv-storage
+          subPath: Https-Frontend-Certificates/localhost.key
+  restartPolicy: OnFailure
+  imagePullSecrets:
+    - name: acr-secret

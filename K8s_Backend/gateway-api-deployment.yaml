@@ -53,9 +53,9 @@ spec:
             - name: ASPNETCORE_URLS
               value: http://*:8080/;https://*:8081/
             - name: AuthenticationParameters__Authority
-              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity
+              value: https://192.168.31.73:30000/auth/realms/MicroserviceIdentity
             - name: AuthenticationParameters__TokenEndpoint
-              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+              value: https://192.168.31.73:30000/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
           image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/gatewayapi:latest
           name: gateway-api
           imagePullPolicy: IfNotPresent

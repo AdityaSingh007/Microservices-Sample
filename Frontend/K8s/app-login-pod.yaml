@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app-login-pod: app-login
+  name: app-login
+spec:
+  volumes:
+    - name: app-login-pv-storage
+      persistentVolumeClaim:
+        claimName: local-pv-volume-claim
+  containers:
+    - image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/frontend/app-login
+      name: app-login
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 443
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /etc/ssl/certs/localhost.crt
+          name: app-login-pv-storage
+          subPath: Https-Frontend-Certificates/localhost.crt
+        - mountPath: /etc/ssl/private/localhost.key
+          name: app-login-pv-storage
+          subPath: Https-Frontend-Certificates/localhost.key
+  restartPolicy: OnFailure
+  imagePullSecrets:
+    - name: acr-secret

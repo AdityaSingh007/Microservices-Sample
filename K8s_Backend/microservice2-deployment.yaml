@@ -53,7 +53,7 @@ spec:
             - name: ASPNETCORE_URLS
               value: http://*:8080/;https://*:8081/
             - name: AuthenticationParameters__Authority
-              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity
+              value: https://192.168.31.73:30000/auth/realms/MicroserviceIdentity
             - name: LoggingParameters__ElasticPassword
               value: Aditya#123
             - name: LoggingParameters__ElasticUserName
@@ -61,9 +61,9 @@ spec:
             - name: LoggingParameters__LoggingUrl
               value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
             - name: ServiceBusAuthenticationParameters__Authority
-              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity
+              value: https://192.168.31.73:30000/auth/realms/MicroserviceIdentity
             - name: ServiceBusAuthenticationParameters__TokenEndpoint
-              value: https://192.168.31.72:8443/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+              value: https://192.168.31.73:30000/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
           image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice2:latest
           imagePullPolicy: IfNotPresent
           name: microservice2
