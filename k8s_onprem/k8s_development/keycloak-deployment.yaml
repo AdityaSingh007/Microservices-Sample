@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    microservices-keycloak-identity-pod: microservices-keycloak-identity
+  name: microservices-keycloak-identity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      microservices-keycloak-identity-pod: microservices-keycloak-identity
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        microservices-keycloak-identity-pod: microservices-keycloak-identity
+    spec:
+      volumes:
+        - name: keycloak-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
+      containers:
+        - args:
+            - start-dev
+            - --import-realm
+          env:
+            - name: DB_ADDR
+              value: postgres
+            - name: DB_DATABASE
+              value: keycloak
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: microservices-secrets
+            - name: DB_SCHEMA
+              value: public
+            - name: DB_USER
+              value: keycloak
+            - name: DB_VENDOR
+              value: POSTGRES
+            - name: KC_FEATURES
+              value: preview,token-exchange
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            - name: KC_HTTPS_CERTIFICATE_FILE
+              value: /opt/keycloak/conf/server.crt
+            - name: KC_HTTPS_CERTIFICATE_KEY_FILE
+              value: /opt/keycloak/conf/server.key
+            - name: KC_HTTP_RELATIVE_PATH
+              value: /auth
+            - name: KEYCLOAK_ADMIN
+              value: admin
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: KEYCLOAK_ADMIN_PASSWORD
+                  name: microservices-secrets
+          image: quay.io/keycloak/keycloak:26.2.4
+          name: microservices-keycloak-identity
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8443
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/keycloak/data/import
+              name: keycloak-pv-storage
+              subPath: Identity-Realm-Import
+            - mountPath: /opt/keycloak/conf/server.crt
+              name: keycloak-pv-storage
+              subPath: Https-Certificates/localhost.crt
+            - mountPath: /opt/keycloak/conf/server.key
+              name: keycloak-pv-storage
+              subPath: Https-Certificates/localhost.key
+      restartPolicy: Always

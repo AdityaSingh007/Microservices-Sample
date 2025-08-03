@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    microservices-sqlserver-pod: microservices-sqlserver
+  name: microservices-sqlserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      microservices-sqlserver-pod: microservices-sqlserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        microservices-sqlserver-pod: microservices-sqlserver
+    spec:
+      volumes:
+        - name: sqlserver-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
+      containers:
+        - env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MSSQL_SA_PASSWORD
+                  name: microservices-secrets
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 0
+          livenessProbe:
+            exec:
+              command:
+                [
+                  "sh",
+                  "-c",
+                  "/opt/mssql-tools18/bin/sqlcmd -C -S microservices-sqlserver -U sa -P ${MSSQL_SA_PASSWORD} -Q 'SELECT 1' -b -o /dev/null",
+                ]
+            initialDelaySeconds: 60
+            failureThreshold: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: microservices-sqlserver
+          ports:
+            - containerPort: 1433
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/opt/mssql/data
+              name: sqlserver-pv-storage
+              subPath: data
+            - mountPath: /var/opt/mssql/log
+              name: sqlserver-pv-storage
+              subPath: log
+            - mountPath: /var/opt/mssql/secrets
+              name: sqlserver-pv-storage
+              subPath: secrets
+      hostname: microservices-sqlserver
+      restartPolicy: Always

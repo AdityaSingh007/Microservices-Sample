@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    microservice1-Pod: microservice1
+  name: microservice1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      microservice1-Pod: microservice1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        microservice1-Pod: microservice1
+    spec:
+      volumes:
+        - name: microservice1-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
+      initContainers:
+        - name: wait-for-microservices-keycloak-identity
+          image: busybox:latest
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup microservices-keycloak-identity.default.svc.cluster.local; do echo 'waiting for miicroservices-keycloak-identity'; sleep 2; done",
+            ]
+        - name: wait-for-microservices-sqlserver
+          image: busybox:latest
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup microservices-sqlserver.default.svc.cluster.local; do echo 'waiting for microservices-sqlserver'; sleep 2; done",
+            ]
+      containers:
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+            - name: ASPNETCORE_HTTPS_PORTS
+              value: "8081"
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-secrets
+                  key: ASPNETCORE_Kestrel__Certificates__Default__Password
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /https/aspnetapp.pfx
+            - name: ASPNETCORE_URLS
+              value: http://*:8080/;https://*:8081/
+            - name: AuthenticationParameters__Authority
+              value: https://20.253.43.110:30000/auth/realms/MicroserviceIdentity
+            - name: LoggingParameters__ElasticPassword
+              value: Aditya#123
+            - name: LoggingParameters__ElasticUserName
+              value: elastic
+            - name: LoggingParameters__LoggingUrl
+              value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
+          image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice1:latest
+          imagePullPolicy: IfNotPresent
+          name: microservice1
+          volumeMounts:
+            - mountPath: /home/app/.aspnet/https
+              name: microservice1-pv-storage
+              subPath: ASP.NET/Https
+            - mountPath: /https
+              name: microservice1-pv-storage
+              subPath: Https
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: acr-secret

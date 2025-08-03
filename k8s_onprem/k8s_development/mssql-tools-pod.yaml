@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    mssql-tools-pod: mssql-tools
+  name: mssql-tools
+spec:
+  volumes:
+    - name: mssql-tools-pv-storage
+      persistentVolumeClaim:
+        claimName: local-pv-volume-claim
+  containers:
+    - env:
+        - name: MSSQL_SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: MSSQL_SA_PASSWORD
+              name: microservices-secrets
+      image: mcr.microsoft.com/mssql-tools:latest
+      name: mssql-tools
+      imagePullPolicy: IfNotPresent
+      command:
+        [
+          "sh",
+          "-c",
+          "sleep 60 && /opt/mssql-tools/bin/sqlcmd -S microservices-sqlserver -l 60 -U sa -P ${MSSQL_SA_PASSWORD} -d master -i /tmp/mssql-init.sql",
+        ]
+      volumeMounts:
+        - mountPath: /tmp/mssql-init.sql
+          name: mssql-tools-pv-storage
+          subPath: mssql-init.sql
+  restartPolicy: OnFailure

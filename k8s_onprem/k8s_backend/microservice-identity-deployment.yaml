@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    microservice-identity-Pod: microservice-identity
+  name: microservice-identity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      microservice-identity-Pod: microservice-identity
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        microservice-identity-Pod: microservice-identity
+    spec:
+      volumes:
+        - name: microservice-identity-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
+      initContainers:
+        - name: wait-for-microservices-keycloak-identity
+          image: busybox:latest
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup microservices-keycloak-identity.default.svc.cluster.local; do echo 'waiting for microservices-keycloak-identity'; sleep 2; done",
+            ]
+        - name: wait-for-microservices-sqlserver
+          image: busybox:latest
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup microservices-sqlserver.default.svc.cluster.local; do echo 'waiting for microservices-sqlserver'; sleep 2; done",
+            ]
+      containers:
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+            - name: ASPNETCORE_HTTPS_PORTS
+              value: "8081"
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-secrets
+                  key: ASPNETCORE_Kestrel__Certificates__Default__Password
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /https/aspnetapp.pfx
+            - name: ASPNETCORE_URLS
+              value: http://*:8080/;https://*:8081/
+            - name: LoggingParameters__ElasticPassword
+              value: Aditya#123
+            - name: LoggingParameters__ElasticUserName
+              value: elastic
+            - name: LoggingParameters__LoggingUrl
+              value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
+            - name: OIDC__Authority
+              value: https://20.253.43.110:30000/auth/realms/MicroserviceIdentity
+          image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice-identity:latest
+          name: microservice-identity
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /home/app/.aspnet/https
+              name: microservice-identity-pv-storage
+              subPath: ASP.NET/Https
+            - mountPath: /https
+              name: microservice-identity-pv-storage
+              subPath: Https
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: acr-secret

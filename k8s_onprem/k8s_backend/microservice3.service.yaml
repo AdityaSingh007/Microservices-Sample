@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    microservice3-Pod: microservice3
+  name: microservice3
+spec:
+  type: LoadBalancer
+  ports:
+    - name: "8081"
+      port: 8081
+      targetPort: 8081
+  selector:
+    microservice3-Pod: microservice3
