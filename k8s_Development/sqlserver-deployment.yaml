@@ -19,7 +19,7 @@ spec:
       volumes:
         - name: sqlserver-pv-storage
           persistentVolumeClaim:
-            claimName: local-pv-volume-claim
+            claimName: azurefile
       containers:
         - env:
             - name: ACCEPT_EULA
@@ -51,12 +51,12 @@ spec:
           volumeMounts:
             - mountPath: /var/opt/mssql/data
               name: sqlserver-pv-storage
-              subPath: data
+              subPath: kubernetes-mount/data
             - mountPath: /var/opt/mssql/log
               name: sqlserver-pv-storage
-              subPath: log
+              subPath: kubernetes-mount/log
             - mountPath: /var/opt/mssql/secrets
               name: sqlserver-pv-storage
-              subPath: secrets
+              subPath: kubernetes-mount/secrets
       hostname: microservices-sqlserver
       restartPolicy: Always

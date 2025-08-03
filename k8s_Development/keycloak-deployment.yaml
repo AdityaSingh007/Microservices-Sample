@@ -19,7 +19,7 @@ spec:
       volumes:
         - name: keycloak-pv-storage
           persistentVolumeClaim:
-            claimName: local-pv-volume-claim
+            claimName: azurefile
       containers:
         - args:
             - start-dev
@@ -65,11 +65,11 @@ spec:
           volumeMounts:
             - mountPath: /opt/keycloak/data/import
               name: keycloak-pv-storage
-              subPath: Identity-Realm-Import
+              subPath: kubernetes-mount/Identity-Realm-Import
             - mountPath: /opt/keycloak/conf/server.crt
               name: keycloak-pv-storage
-              subPath: Https-Certificates/localhost.crt
+              subPath: kubernetes-mount/Https-Certificates/localhost.crt
             - mountPath: /opt/keycloak/conf/server.key
               name: keycloak-pv-storage
-              subPath: Https-Certificates/localhost.key
+              subPath: kubernetes-mount/Https-Certificates/localhost.key
       restartPolicy: Always

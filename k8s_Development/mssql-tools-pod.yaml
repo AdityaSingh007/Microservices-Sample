@@ -8,7 +8,7 @@ spec:
   volumes:
     - name: mssql-tools-pv-storage
       persistentVolumeClaim:
-        claimName: local-pv-volume-claim
+        claimName: azurefile
   containers:
     - env:
         - name: MSSQL_SA_PASSWORD
@@ -27,5 +27,5 @@ spec:
       volumeMounts:
         - mountPath: /tmp/mssql-init.sql
           name: mssql-tools-pv-storage
-          subPath: mssql-init.sql
+          subPath: kubernetes-mount/mssql-init.sql
   restartPolicy: OnFailure

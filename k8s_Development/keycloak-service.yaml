@@ -5,10 +5,9 @@ metadata:
     microservices-keycloak-identity-pod: microservices-keycloak-identity
   name: microservices-keycloak-identity
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
-    - port: 8443
+    - port: 30000
       targetPort: 8443
-      nodePort: 30000
   selector:
     microservices-keycloak-identity-pod: microservices-keycloak-identity

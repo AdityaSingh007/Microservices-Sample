@@ -19,7 +19,7 @@ spec:
       volumes:
         - name: gateway-api-pv-storage
           persistentVolumeClaim:
-            claimName: local-pv-volume-claim
+            claimName: azurefile
       initContainers:
         - name: wait-for-microservices-keycloak-identity
           image: busybox:latest
@@ -53,9 +53,9 @@ spec:
             - name: ASPNETCORE_URLS
               value: http://*:8080/;https://*:8081/
             - name: AuthenticationParameters__Authority
-              value: https://192.168.31.73:30000/auth/realms/MicroserviceIdentity
+              value: https://20.253.43.110:30000/auth/realms/MicroserviceIdentity
             - name: AuthenticationParameters__TokenEndpoint
-              value: https://192.168.31.73:30000/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+              value: https://20.253.43.110:30000/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
           image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/gatewayapi:latest
           name: gateway-api
           imagePullPolicy: IfNotPresent
@@ -65,10 +65,10 @@ spec:
           volumeMounts:
             - mountPath: /home/app/.aspnet/https
               name: gateway-api-pv-storage
-              subPath: ASP.NET/Https
+              subPath: kubernetes-mount/ASP.NET/Https
             - mountPath: /https
               name: gateway-api-pv-storage
-              subPath: Https
+              subPath: kubernetes-mount/Https
       restartPolicy: Always
       imagePullSecrets:
         - name: acr-secret
