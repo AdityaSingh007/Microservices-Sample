@@ -39,6 +39,16 @@ spec:
             ]
       containers:
         - env:
+            - name: keycloak_host_Ip
+              valueFrom:
+                configMapKeyRef:
+                  name: ms-configmap
+                  key: keycloak_host_Ip
+            - name: keycloak_host_Port
+              valueFrom:
+                configMapKeyRef:
+                  name: ms-configmap
+                  key: keycloak_host_Port
             - name: ASPNETCORE_ENVIRONMENT
               value: Production
             - name: ASPNETCORE_HTTPS_PORTS
@@ -53,7 +63,7 @@ spec:
             - name: ASPNETCORE_URLS
               value: http://*:8080/;https://*:8081/
             - name: AuthenticationParameters__Authority
-              value: https://20.253.43.110:30000/auth/realms/MicroserviceIdentity
+              value: "https://$(keycloak_host_Ip):$(keycloak_host_Port)/auth/realms/MicroserviceIdentity"
             - name: LoggingParameters__ElasticPassword
               value: Aditya#123
             - name: LoggingParameters__ElasticUserName

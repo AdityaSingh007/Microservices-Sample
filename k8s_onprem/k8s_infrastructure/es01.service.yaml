@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     elasticsearch.k8s.elastic.co/cluster-name: elasticsearch-development
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: "9200"
       port: 9200

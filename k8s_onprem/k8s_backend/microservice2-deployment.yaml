@@ -39,6 +39,16 @@ spec:
             ]
       containers:
         - env:
+            - name: keycloak_host_Ip
+              valueFrom:
+                configMapKeyRef:
+                  name: ms-configmap
+                  key: keycloak_host_Ip
+            - name: keycloak_host_Port
+              valueFrom:
+                configMapKeyRef:
+                  name: ms-configmap
+                  key: keycloak_host_Port
             - name: ASPNETCORE_ENVIRONMENT
               value: Production
             - name: ASPNETCORE_HTTPS_PORTS
@@ -53,7 +63,7 @@ spec:
             - name: ASPNETCORE_URLS
               value: http://*:8080/;https://*:8081/
             - name: AuthenticationParameters__Authority
-              value: https://192.168.31.73:30000/auth/realms/MicroserviceIdentity
+              value: "https://$(keycloak_host_Ip):$(keycloak_host_Port)/auth/realms/MicroserviceIdentity"
             - name: LoggingParameters__ElasticPassword
               value: Aditya#123
             - name: LoggingParameters__ElasticUserName
@@ -61,9 +71,9 @@ spec:
             - name: LoggingParameters__LoggingUrl
               value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
             - name: ServiceBusAuthenticationParameters__Authority
-              value: https://20.253.43.110:30000/auth/realms/MicroserviceIdentity
+              value: "https://$(keycloak_host_Ip):$(keycloak_host_Port)/auth/realms/MicroserviceIdentity"
             - name: ServiceBusAuthenticationParameters__TokenEndpoint
-              value: https://20.253.43.110:30000/auth/realms/MicroserviceIdentity/protocol/openid-connect/token
+              value: "https://$(keycloak_host_Ip):$(keycloak_host_Port)/auth/realms/MicroserviceIdentity/protocol/openid-connect/token"
           image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice2:latest
           imagePullPolicy: IfNotPresent
           name: microservice2
