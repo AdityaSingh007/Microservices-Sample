@@ -14,7 +14,7 @@
 
 **Delete default elastic admin secret**
 
-### kubectl delete secret quickstart-es-elastic-user
+### kubectl delete secret elasticsearch-development-es-elastic-user -n elastic-system
 
 **set up azure container registry secert**
 
