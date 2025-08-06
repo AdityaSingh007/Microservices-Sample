@@ -12,6 +12,10 @@
 
 ### kubectl get pods -n elastic-system
 
+**Delete default elastic admin secret**
+
+### kubectl delete secret quickstart-es-elastic-user
+
 **set up azure container registry secert**
 
 ### kubectl create secret docker-registry acr-secret --docker-server=microservicesprivate-cngmana9bbhsa5ck.azurecr.io --docker-username=msprivateregistry --docker-password={password from azure portal}
