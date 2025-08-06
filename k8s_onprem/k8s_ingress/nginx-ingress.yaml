@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ms.backend.com
+      http:
+        paths:
+          - path: /microservices-keycloak-identity/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: microservices-keycloak-identity
+                port:
+                  number: 30000
+          - path: /es01
+            pathType: Exact
+            backend:
+              service:
+                name: elasticsearch-https-service
+                port:
+                  number: 9200

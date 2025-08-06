@@ -5,7 +5,7 @@ metadata:
     microservices-keycloak-identity-pod: microservices-keycloak-identity
   name: microservices-keycloak-identity
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 30000
       targetPort: 8443

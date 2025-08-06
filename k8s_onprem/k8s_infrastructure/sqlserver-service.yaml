@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    microservices-sqlserver-pod: microservices-sqlserver
+  name: microservices-sqlserver
+spec:
+  type: NodePort
+  ports:
+    - name: "microservices-sqlserver-nodeport"
+      port: 1433 # Port exposed by the service within the cluster
+      targetPort: 1433 # Port on which the SQL Server container listens
+      nodePort: 30433 # Optional: specify a desired NodePort within the rang
+  selector:
+    microservices-sqlserver-pod: microservices-sqlserver
