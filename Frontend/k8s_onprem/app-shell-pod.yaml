@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app-shell-pod: app-shell
+  name: app-shell
+spec:
+  volumes:
+    - name: app-shell-pv-storage
+      persistentVolumeClaim:
+        claimName: local-pv-volume-claim
+  containers:
+    - image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/frontend/app-shell
+      name: app-shell
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 443
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /etc/ssl/certs/localhost.crt
+          name: app-shell-pv-storage
+          subPath: Https-Frontend-Certificates/localhost.crt
+        - mountPath: /etc/ssl/private/localhost.key
+          name: app-shell-pv-storage
+          subPath: Https-Frontend-Certificates/localhost.key
+  restartPolicy: OnFailure
+  imagePullSecrets:
+    - name: acr-secret

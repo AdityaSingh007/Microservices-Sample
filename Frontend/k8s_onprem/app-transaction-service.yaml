@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app-transaction-pod: app-transaction
+  name: app-transaction
+spec:
+  type: LoadBalancer
+  ports:
+    - name: "4203"
+      port: 4203
+      targetPort: 443
+  selector:
+    app-transaction-pod: app-transaction

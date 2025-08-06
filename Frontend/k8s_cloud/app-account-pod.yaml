@@ -8,7 +8,7 @@ spec:
   volumes:
     - name: app-account-pv-storage
       persistentVolumeClaim:
-        claimName: azurefile
+        claimName: local-pv-volume-claim
   containers:
     - image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/frontend/app-account
       name: app-account
@@ -19,10 +19,10 @@ spec:
       volumeMounts:
         - mountPath: /etc/ssl/certs/localhost.crt
           name: app-account-pv-storage
-          subPath: kubernetes-mount/Https-Frontend-Certificates/localhost.crt
+          subPath: Https-Frontend-Certificates/localhost.crt
         - mountPath: /etc/ssl/private/localhost.key
           name: app-account-pv-storage
-          subPath: kubernetes-mount/Https-Frontend-Certificates/localhost.key
+          subPath: Https-Frontend-Certificates/localhost.key
   restartPolicy: OnFailure
   imagePullSecrets:
     - name: acr-secret
