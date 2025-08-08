@@ -78,12 +78,9 @@ spec:
           imagePullPolicy: IfNotPresent
           name: microservice2
           volumeMounts:
-            - mountPath: /home/app/.aspnet/https
+            - mountPath: /https/aspnetapp.pfx
               name: microservice2-pv-storage
-              subPath: ASP.NET/Https
-            - mountPath: /https
-              name: microservice2-pv-storage
-              subPath: Https
+              subPath: Backend-Https-Certificates/aspnetapp.pfx
       restartPolicy: Always
       imagePullSecrets:
         - name: acr-secret

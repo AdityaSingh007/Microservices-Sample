@@ -77,12 +77,9 @@ spec:
             - containerPort: 8081
               protocol: TCP
           volumeMounts:
-            - mountPath: /home/app/.aspnet/https
+            - mountPath: /https/aspnetapp.pfx
               name: microservice-identity-pv-storage
-              subPath: ASP.NET/Https
-            - mountPath: /https
-              name: microservice-identity-pv-storage
-              subPath: Https
+              subPath: Backend-Https-Certificates/aspnetapp.pfx
       restartPolicy: Always
       imagePullSecrets:
         - name: acr-secret

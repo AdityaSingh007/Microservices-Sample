@@ -69,8 +69,8 @@ spec:
               subPath: Identity-Realm-Import
             - mountPath: /opt/keycloak/conf/server.crt
               name: keycloak-pv-storage
-              subPath: Https-Certificates/localhost.crt
+              subPath: Backend-Https-Certificates/localhost.crt
             - mountPath: /opt/keycloak/conf/server.key
               name: keycloak-pv-storage
-              subPath: Https-Certificates/localhost.key
+              subPath: Backend-Https-Certificates/localhost.key
       restartPolicy: Always
