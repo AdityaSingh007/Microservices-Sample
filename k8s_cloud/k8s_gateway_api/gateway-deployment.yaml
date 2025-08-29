@@ -1,0 +1,27 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: gateway-byo-scenario
+  annotations:
+    alb.networking.azure.io/alb-id: /subscriptions/22ef334e-0063-40f0-9a4a-8d5fa092e6f5/resourceGroups/aks-agfc-byo-rg/providers/Microsoft.ServiceNetworking/trafficControllers/alb-byo
+spec:
+  gatewayClassName: azure-alb-external
+  listeners:
+    - name: https-listener
+      port: 443
+      protocol: HTTPS
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              shared-gateway-access: "true"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: frontend-tls-secret
+            kind: Secret
+            group: ""
+  addresses:
+    - type: alb.networking.azure.io/alb-frontend
+      value: frontend-byo

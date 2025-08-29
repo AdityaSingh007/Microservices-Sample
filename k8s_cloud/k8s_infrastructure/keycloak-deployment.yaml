@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    microservices-keycloak-identity-pod: microservices-keycloak-identity
+    app: microservices-keycloak-identity
   name: microservices-keycloak-identity
 spec:
   replicas: 1
   selector:
     matchLabels:
-      microservices-keycloak-identity-pod: microservices-keycloak-identity
+      app: microservices-keycloak-identity
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        microservices-keycloak-identity-pod: microservices-keycloak-identity
+        app: microservices-keycloak-identity
     spec:
       volumes:
         - name: keycloak-pv-storage
@@ -61,7 +61,15 @@ spec:
           name: microservices-keycloak-identity
           ports:
             - containerPort: 8443
-              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /auth/health/ready
+              port: 9000
+              scheme: HTTPS
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
           volumeMounts:
             - mountPath: /opt/keycloak/data/import
               name: keycloak-pv-storage
@@ -73,3 +81,10 @@ spec:
               name: keycloak-pv-storage
               subPath: kubernetes-mount/Https-Certificates/localhost.key
       restartPolicy: Always
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: default
+  labels:
+    shared-gateway-access: "true"

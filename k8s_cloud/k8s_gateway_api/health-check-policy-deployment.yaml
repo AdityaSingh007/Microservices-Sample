@@ -1,0 +1,83 @@
+apiVersion: alb.networking.azure.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: https-keycloak-tls-policy
+  namespace: default
+spec:
+  targetRef:
+    group: ""
+    kind: Service
+    name: microservices-keycloak-identity-svc
+    namespace: default
+  default:
+    sni: gjhdc6dzbsefc4hp.fz01.alb.azure.com
+    ports:
+      - port: 8443
+---
+apiVersion: alb.networking.azure.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: gateway-health-check-policy-keycloak
+  namespace: default
+spec:
+  targetRef:
+    group: ""
+    kind: Service
+    name: microservices-keycloak-identity-svc
+    namespace: default
+  default:
+    interval: 5s
+    timeout: 3s
+    healthyThreshold: 1
+    unhealthyThreshold: 1
+    port: 8443
+    http:
+      host: gjhdc6dzbsefc4hp.fz01.alb.azure.com
+      path: /auth/realms/master
+      match:
+        statusCodes:
+          - start: 200
+            end: 299
+    useTLS: true
+---
+apiVersion: alb.networking.azure.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: https-es01-tls-policy
+  namespace: elastic-system
+spec:
+  targetRef:
+    group: ""
+    kind: Service
+    name: elasticsearch-https-service
+    namespace: elastic-system
+  default:
+    sni: gjhdc6dzbsefc4hp.fz01.alb.azure.com
+    ports:
+      - port: 9200
+---
+apiVersion: alb.networking.azure.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: gateway-health-check-policy-es01
+  namespace: elastic-system
+spec:
+  targetRef:
+    group: ""
+    kind: Service
+    name: elasticsearch-https-service
+    namespace: elastic-system
+  default:
+    interval: 5s
+    timeout: 3s
+    healthyThreshold: 1
+    unhealthyThreshold: 1
+    port: 9200
+    http:
+      host: gjhdc6dzbsefc4hp.fz01.alb.azure.com
+      path: /es01
+      match:
+        statusCodes:
+          - start: 200
+            end: 299
+    useTLS: true
