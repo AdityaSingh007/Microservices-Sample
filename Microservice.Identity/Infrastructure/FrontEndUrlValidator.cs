@@ -13,7 +13,7 @@ namespace Microservice.Identity.Infrastructure
         public Task<bool> IsValidAsync(string returnUrl)
         {
             var uri = new Uri(returnUrl);
-            return Task.FromResult(uri.Host == "localhost" && uri.Port == 4200);
+            return Task.FromResult(uri.Host == "localhost" || uri.Port == 4200);
         }
     }
 }

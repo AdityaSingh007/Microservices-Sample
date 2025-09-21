@@ -1,5 +1,7 @@
 import { ModuleFederationConfig } from '@nx/module-federation';
 
+const { env } = require('process');
+
 const config: ModuleFederationConfig = {
   name: 'shell',
   /**
@@ -14,12 +16,7 @@ const config: ModuleFederationConfig = {
    * declare module 'my-external-remote';
    *
    */
-  remotes: [
-    ['login', 'https://localhost:4201/remoteEntry.mjs'],
-    ['customer', 'https://localhost:4202/remoteEntry.mjs'],
-    ['transaction', 'https://localhost:4203/remoteEntry.mjs'],
-    ['account', 'https://localhost:4204/remoteEntry.mjs'],
-  ],
+  remotes: [],
 };
 
 /**

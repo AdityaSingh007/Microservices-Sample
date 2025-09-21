@@ -1,0 +1,157 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: ms-keycloak-upstream
+  namespace: gloo-system
+spec:
+  kube:
+    serviceName: microservices-keycloak-identity
+    serviceNamespace: default
+    servicePort: 8443
+  sslConfig:
+    secretRef:
+      name: ms-tls-secret
+      namespace: gloo-system
+
+---
+# apiVersion: gloo.solo.io/v1
+# kind: Upstream
+# metadata:
+#   name: ms-elastic-upstream
+#   namespace: gloo-system
+# spec:
+#   kube:
+#     serviceName: elasticsearch-https-service
+#     serviceNamespace: elastic-system
+#     servicePort: 9200
+#   sslConfig:
+#     secretRef:
+#       name: ms-tls-secret
+#       namespace: gloo-system
+
+# ---
+# apiVersion: gloo.solo.io/v1
+# kind: Upstream
+# metadata:
+#   name: ms-kibana-upstream
+#   namespace: gloo-system
+# spec:
+#   kube:
+#     serviceName: kibana-development-https-service
+#     serviceNamespace: elastic-system
+#     servicePort: 5601
+#   sslConfig:
+#     secretRef:
+#       name: ms-tls-secret
+#       namespace: gloo-system
+# ---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: ms-gateway-api-upstream
+  namespace: gloo-system
+spec:
+  kube:
+    serviceName: gateway-api
+    serviceNamespace: default
+    servicePort: 8081
+  sslConfig:
+    secretRef:
+      name: ms-tls-secret
+      namespace: gloo-system
+
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: ms-microservice-identity-upstream
+  namespace: gloo-system
+spec:
+  kube:
+    serviceName: microservice-identity
+    serviceNamespace: default
+    servicePort: 7158
+  sslConfig:
+    secretRef:
+      name: ms-tls-secret
+      namespace: gloo-system
+
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: mf-shell-upstream
+  namespace: gloo-system
+spec:
+  kube:
+    serviceName: app-shell
+    serviceNamespace: default
+    servicePort: 4200
+  sslConfig:
+    secretRef:
+      name: ms-tls-secret
+      namespace: gloo-system
+
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: mf-account-upstream
+  namespace: gloo-system
+spec:
+  kube:
+    serviceName: app-account
+    serviceNamespace: default
+    servicePort: 4204
+  sslConfig:
+    secretRef:
+      name: ms-tls-secret
+      namespace: gloo-system
+
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: mf-customer-upstream
+  namespace: gloo-system
+spec:
+  kube:
+    serviceName: app-customer
+    serviceNamespace: default
+    servicePort: 4202
+  sslConfig:
+    secretRef:
+      name: ms-tls-secret
+      namespace: gloo-system
+
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: mf-login-upstream
+  namespace: gloo-system
+spec:
+  kube:
+    serviceName: app-login
+    serviceNamespace: default
+    servicePort: 4201
+  sslConfig:
+    secretRef:
+      name: ms-tls-secret
+      namespace: gloo-system
+
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: mf-transaction-upstream
+  namespace: gloo-system
+spec:
+  kube:
+    serviceName: app-transaction
+    serviceNamespace: default
+    servicePort: 4203
+  sslConfig:
+    secretRef:
+      name: ms-tls-secret
+      namespace: gloo-system

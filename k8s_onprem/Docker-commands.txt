@@ -1,0 +1,9 @@
+
+## Docker tag image:-
+docker tag {image-name} microservicesprivate-cngmana9bbhsa5ck.azurecr.io/frontend/{image-name}
+
+## Docker image push to ACR:-
+docker push microservicesprivate-cngmana9bbhsa5ck.azurecr.io/frontend/{image-name}
+
+## Docker-compose build services frontend:-
+docker-compose -f modulefederation-microfrontends.yml build {service-name}

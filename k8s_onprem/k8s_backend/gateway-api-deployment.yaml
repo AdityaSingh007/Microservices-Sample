@@ -63,9 +63,9 @@ spec:
             - name: ASPNETCORE_URLS
               value: http://*:8080/;https://*:8081/
             - name: AuthenticationParameters__Authority
-              value: "https://$(keycloak_host_Ip):$(keycloak_host_Port)/auth/realms/MicroserviceIdentity"
+              value: "https://$(keycloak_host_Ip)/auth/realms/MicroserviceIdentity"
             - name: AuthenticationParameters__TokenEndpoint
-              value: "https://$(keycloak_host_Ip):$(keycloak_host_Port)/auth/realms/MicroserviceIdentity/protocol/openid-connect/token"
+              value: "https://$(keycloak_host_Ip)/auth/realms/MicroserviceIdentity/protocol/openid-connect/token"
           image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/gatewayapi:latest
           name: gateway-api
           imagePullPolicy: IfNotPresent

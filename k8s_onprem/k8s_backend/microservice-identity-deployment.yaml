@@ -69,7 +69,7 @@ spec:
             - name: LoggingParameters__LoggingUrl
               value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
             - name: OIDC__Authority
-              value: "https://$(keycloak_host_Ip):$(keycloak_host_Port)/auth/realms/MicroserviceIdentity"
+              value: "https://$(keycloak_host_Ip)/auth/realms/MicroserviceIdentity"
           image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice-identity:latest
           name: microservice-identity
           imagePullPolicy: IfNotPresent

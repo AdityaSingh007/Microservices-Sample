@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ms-gateway
+  namespace: gloo-system
+  labels:
+    gateway: ms-gateway
+spec:
+  gatewayClassName: gloo-gateway
+  listeners:
+    - name: ms-gateway
+      port: 443
+      protocol: HTTPS
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: ms-tls-secret
+            kind: Secret

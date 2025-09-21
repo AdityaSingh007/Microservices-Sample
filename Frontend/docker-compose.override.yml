@@ -1,0 +1,115 @@
+services:
+  app-shell:
+    build:
+      context: ./org
+      args:
+        # Use BuildKit for better caching and parallelization
+        BUILDKIT_INLINE_CACHE: 1
+      # Increase build memory limit
+      shm_size: 2gb
+    # Override environment variables for development
+    environment:
+      - NODE_ENV=production
+      - NPM_CONFIG_CACHE=/tmp/.npm
+    # Add volume for npm cache persistence
+    volumes:
+      - npm-cache:/tmp/.npm
+    # Add build-time memory limits
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+  app-customer:
+    build:
+      context: ./org
+      args:
+        # Use BuildKit for better caching and parallelization
+        BUILDKIT_INLINE_CACHE: 1
+      # Increase build memory limit
+      shm_size: 2gb
+    # Override environment variables for development
+    environment:
+      - NODE_ENV=production
+      - NPM_CONFIG_CACHE=/tmp/.npm
+    # Add volume for npm cache persistence
+    volumes:
+      - npm-cache:/tmp/.npm
+    # Add build-time memory limits
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+  app-transaction:
+    build:
+      context: ./org
+      args:
+        # Use BuildKit for better caching and parallelization
+        BUILDKIT_INLINE_CACHE: 1
+      # Increase build memory limit
+      shm_size: 2gb
+    # Override environment variables for development
+    environment:
+      - NODE_ENV=production
+      - NPM_CONFIG_CACHE=/tmp/.npm
+    # Add volume for npm cache persistence
+    volumes:
+      - npm-cache:/tmp/.npm
+    # Add build-time memory limits
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+  app-account:
+    build:
+      context: ./org
+      args:
+        # Use BuildKit for better caching and parallelization
+        BUILDKIT_INLINE_CACHE: 1
+      # Increase build memory limit
+      shm_size: 2gb
+    # Override environment variables for development
+    environment:
+      - NODE_ENV=production
+      - NPM_CONFIG_CACHE=/tmp/.npm
+    # Add volume for npm cache persistence
+    volumes:
+      - npm-cache:/tmp/.npm
+    # Add build-time memory limits
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+  app-login:
+    build:
+      context: ./org
+      args:
+        # Use BuildKit for better caching and parallelization
+        BUILDKIT_INLINE_CACHE: 1
+      # Increase build memory limit
+      shm_size: 2gb
+    # Override environment variables for development
+    environment:
+      - NODE_ENV=production
+      - NPM_CONFIG_CACHE=/tmp/.npm
+    # Add volume for npm cache persistence
+    volumes:
+      - npm-cache:/tmp/.npm
+    # Add build-time memory limits
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+
+volumes:
+  npm-cache:
+    driver: local

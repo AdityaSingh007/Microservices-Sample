@@ -5,7 +5,7 @@ metadata:
     microservice-identity-Pod: microservice-identity
   name: microservice-identity
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: "7158"
       port: 7158

@@ -5,7 +5,7 @@ COPY . .
 
 RUN rm -rf node_modules
 RUN npm install --verbose --force
-RUN npm install -g @nrwl/cli
+#RUN npm install -g @nrwl/cli
 RUN npx nx build customer --configuration=production
 #RUN pwd && ls
 

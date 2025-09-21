@@ -1,0 +1,144 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ms-http-route-keycloak
+  namespace: gloo-system
+  labels:
+    gateway: ms-gateway
+spec:
+  parentRefs:
+    - name: ms-gateway
+      namespace: gloo-system
+      sectionName: ms-gateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /auth
+      backendRefs:
+        - name: ms-keycloak-upstream
+          kind: Upstream
+          group: gloo.solo.io
+
+## TO ENABLE ELASTICSEARCH AND KIBANA, UNCOMMENT THE BELOW SECTIONS
+---
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: HTTPRoute
+# metadata:
+#   name: ms-http-route-es01
+#   namespace: gloo-system
+#   labels:
+#     gateway: ms-gateway
+# spec:
+#   parentRefs:
+#     - name: ms-gateway
+#       namespace: gloo-system
+#       sectionName: ms-gateway
+#   rules:
+#     - matches:
+#         - path:
+#             type: PathPrefix
+#             value: /es01
+#       backendRefs:
+#         - name: ms-elastic-upstream
+#           kind: Upstream
+#           group: gloo.solo.io
+
+---
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: HTTPRoute
+# metadata:
+#   name: ms-http-route-kibana
+#   namespace: gloo-system
+#   labels:
+#     gateway: ms-gateway
+# spec:
+#   parentRefs:
+#     - name: ms-gateway
+#       namespace: gloo-system
+#       sectionName: ms-gateway
+#   rules:
+#     - matches:
+#         - path:
+#             type: PathPrefix
+#             value: /
+#         - path:
+#             type: PathPrefix
+#             value: /kibana
+#       backendRefs:
+#         - name: ms-kibana-upstream
+#           kind: Upstream
+#           group: gloo.solo.io
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ms-http-route-gateway-api
+  namespace: gloo-system
+  labels:
+    gateway: ms-gateway
+spec:
+  parentRefs:
+    - name: ms-gateway
+      namespace: gloo-system
+      sectionName: ms-gateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /hc-ui
+        - path:
+            type: PathPrefix
+            value: /ui
+        - path:
+            type: PathPrefix
+            value: /healthchecks-api
+      backendRefs:
+        - name: ms-gateway-api-upstream
+          kind: Upstream
+          group: gloo.solo.io
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ms-http-route-identity
+  namespace: gloo-system
+  labels:
+    gateway: ms-gateway
+spec:
+  parentRefs:
+    - name: ms-gateway
+      namespace: gloo-system
+      sectionName: ms-gateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /identity-svc
+        - path:
+            type: PathPrefix
+            value: /bff/login
+        - path:
+            type: PathPrefix
+            value: /bff/user
+        - path:
+            type: PathPrefix
+            value: /signin-oidc
+        - path:
+            type: PathPrefix
+            value: /bff/logout
+        - path:
+            type: PathPrefix
+            value: /signout-callback-oidc
+        - path:
+            type: PathPrefix
+            value: /notificationHub
+        - path:
+            type: PathPrefix
+            value: /api
+      backendRefs:
+        - name: ms-microservice-identity-upstream
+          kind: Upstream
+          group: gloo.solo.io

@@ -17,7 +17,7 @@
   }
   <span class="example-spacer"></span>
   @if (!this.isAuthenticated()) {
-  <a mat-button href="https://localhost:7158/bff/login?returnUrl=https://localhost:4200">
+  <a mat-button href="https://localhost/bff/login?returnUrl=https://localhost/mf-shell">
     <mat-icon
       aria-hidden="false"
       aria-label="Example login icon"
@@ -26,7 +26,7 @@
     Login
   </a>
   } @else {
-  <a mat-button [href]="logoutUrl()+'&returnUrl=https://localhost:4200'">
+  <a mat-button [href]="logoutUrl()+'&returnUrl=https://localhost/mf-shell'">
     <mat-icon
       aria-hidden="false"
       aria-label="Example logout icon"

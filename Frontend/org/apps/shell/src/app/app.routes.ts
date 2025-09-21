@@ -1,27 +1,31 @@
 import { Route } from '@angular/router';
 import { HomePageComponent } from './home/home-page.component';
 import { transactionmanagerGuard } from '@org/common';
+import { loadRemoteModule } from '@nx/angular/mf';
 
 export const appRoutes: Route[] = [
   {
     path: 'account',
     canActivate: [transactionmanagerGuard],
-    loadChildren: () => import('account/Routes').then((m) => m!.remoteRoutes),
+    loadChildren: () =>
+      loadRemoteModule('account', './Routes').then((m) => m.remoteRoutes),
   },
   {
     path: 'transaction',
     canActivate: [transactionmanagerGuard],
     loadChildren: () =>
-      import('transaction/Routes').then((m) => m!.remoteRoutes),
+      loadRemoteModule('transaction', './Routes').then((m) => m.remoteRoutes),
   },
   {
     path: 'customer',
     canActivate: [transactionmanagerGuard],
-    loadChildren: () => import('customer/Routes').then((m) => m!.remoteRoutes),
+    loadChildren: () =>
+      loadRemoteModule('customer', './Routes').then((m) => m.remoteRoutes),
   },
   {
     path: 'login',
-    loadChildren: () => import('login/Routes').then((m) => m!.remoteRoutes),
+    loadChildren: () =>
+      loadRemoteModule('login', './Routes').then((m) => m.remoteRoutes),
   },
   {
     path: '',
