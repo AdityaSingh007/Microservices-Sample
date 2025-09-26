@@ -5,7 +5,7 @@ metadata:
     app-account-pod: app-account
   name: app-account
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: "4204"
       port: 4204

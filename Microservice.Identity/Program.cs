@@ -86,6 +86,7 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("profile");
     options.Scope.Add("offline_access");
     options.Scope.Add("ApiGateway_Fullaccess");
+    options.SignedOutRedirectUri = builder.Configuration["OIDC:SignedOutRedirectUri"];
     options.BackchannelHttpHandler = new HttpClientHandler
     {
         ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true

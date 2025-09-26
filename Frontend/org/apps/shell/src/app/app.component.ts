@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   effect,
   inject,
   OnDestroy,
@@ -20,6 +21,7 @@ import {
 } from '@org/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, Subject, Subscription, takeUntil } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Component({
   imports: [
@@ -45,6 +47,10 @@ export class AppComponent implements OnInit, OnDestroy {
   public isAnonymous = this.auth.isAnonymous;
   public username = this.auth.username;
   public logoutUrl = this.auth.logoutUrl;
+  public returnUrl = environment.authCallbackUrl;
+  public postLogoutRedirectUrl = computed(() => {
+    return this.logoutUrl() + '&returnUrl=' + environment.postLogoutRedirectUrl;
+  });
   private _snackBar = inject(MatSnackBar);
   private destroy$ = new Subject<boolean>();
   private notificationSub!: Subscription;

@@ -5,7 +5,7 @@ metadata:
     app-transaction-pod: app-transaction
   name: app-transaction
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: "4203"
       port: 4203
