@@ -16,6 +16,28 @@
 
 ### kubectl delete secret elasticsearch-development-es-elastic-user -n elastic-system
 
+**Install gloo api gateway**
+
+## kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/standard-install.yaml
+
+## helm repo add gloo https://storage.googleapis.com/solo-public-helm
+
+## helm repo update
+
+## helm install -n gloo-system gloo gloo/gloo --create-namespace --version 1.20.1
+
+**Verify gloo api gateway installation**
+
+## kubectl get pods -n gloo-system | grep gloo
+
+## kubectl get gatewayclass gloo-gateway
+
+**Set up an API gateway**
+
+## kubectl apply -f k8s_gateway/gateway-deployment.yaml
+
+## kubectl get gateway http -n gloo-system
+
 **set up azure container registry secert**
 
 ### kubectl create secret docker-registry acr-secret --docker-server=microservicesprivate-cngmana9bbhsa5ck.azurecr.io --docker-username=msprivateregistry --docker-password={password from azure portal}
@@ -53,5 +75,13 @@
 ### kubectl apply -f k8s_onprem
 
 ### Access frontend at - https://localhost:4200
+
+**Deploy gateway upstream and http-route**
+
+## kubectl apply -f k8s_gateway/http-upstream.yaml
+
+## kubectl apply -f k8s_gateway/http-route-deployment.yaml
+
+## kubectl apply -f k8s_gateway/http-route-frontend-deployment.yaml
 
 **===============================================================================**
