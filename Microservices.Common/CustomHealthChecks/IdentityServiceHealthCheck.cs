@@ -20,7 +20,7 @@ namespace Microservices.Common.CustomHealthChecks
             this.httpClientFactory = httpClientFactory;
             this.configuration = configuration;
             this.logger = logger;
-            IdentityServerHostname = configuration["AuthenticationParameters:Hostname"] ?? throw new ArgumentNullException(nameof(configuration), "Authority configuration is missing.");
+            IdentityServerHostname = configuration["AuthenticationParameters:IdentityHealthCheckEndpoint"] ?? throw new ArgumentNullException(nameof(configuration), "Authority configuration is missing.");
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
@@ -29,21 +29,9 @@ namespace Microservices.Common.CustomHealthChecks
             try
             {
                 var defaultHttpClient = httpClientFactory.CreateClient(HttpClientConstants.DefaultHttpClientName);
-                var healthCheckResponse = await defaultHttpClient.GetAsync(IdentityServerHostname + "/health");
+                var healthCheckResponse = await defaultHttpClient.GetAsync(IdentityServerHostname);
                 healthCheckResponse.EnsureSuccessStatusCode();
-                var content = await healthCheckResponse.Content.ReadAsStringAsync();
-                var checkResponse = JsonConvert.DeserializeObject<HealthCheckResponse>(content);
-                if (checkResponse != null)
-                {
-                    var isHealthy = string.Equals(checkResponse.Status, "up", StringComparison.CurrentCultureIgnoreCase);
-                    if (isHealthy)
-                    {
-                        return HealthCheckResult.Healthy("Identity service is healthy.");
-                    }
-                }
-
-                return new HealthCheckResult(
-                        context.Registration.FailureStatus, "Identity service is un-healthy.");
+                return HealthCheckResult.Healthy("Identity service is healthy.");
             }
             catch (Exception ex)
             {

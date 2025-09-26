@@ -800,10 +800,11 @@
       "secret": "luIBRfCIWf9WZsmZ5oOPDI1GbQemjE7J",
       "redirectUris": [
         "https://localhost:7158/*",
-        "https://localhost:4200/*"
+        "https://localhost/*"
       ],
       "webOrigins": [
-        "https://localhost:4200"
+        "https://localhost:4200",
+        "https://localhost/*"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -822,7 +823,7 @@
         "backchannel.logout.session.required": "true",
         "standard.token.exchange.enabled": "false",
         "login_theme": "keycloak",
-        "post.logout.redirect.uris": "https://localhost:4200/*##https://host.docker.internal:7158/*",
+        "post.logout.redirect.uris": "https://localhost:4200/*##https://host.docker.internal:7158/*##https://localhost/*",
         "frontchannel.logout.session.required": "true",
         "oauth2.device.authorization.grant.enabled": "false",
         "display.on.consent.screen": "false",

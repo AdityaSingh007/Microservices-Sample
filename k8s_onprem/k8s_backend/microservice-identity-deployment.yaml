@@ -70,6 +70,8 @@ spec:
               value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
             - name: OIDC__Authority
               value: "https://$(keycloak_host_Ip)/auth/realms/MicroserviceIdentity"
+            - name: OIDC__SignedOutRedirectUri
+              value: "https://localhost:4200/signout-callback-oidc"
           image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice-identity:latest
           name: microservice-identity
           imagePullPolicy: IfNotPresent

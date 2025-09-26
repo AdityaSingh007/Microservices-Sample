@@ -49,7 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public logoutUrl = this.auth.logoutUrl;
   public returnUrl = environment.authCallbackUrl;
   public postLogoutRedirectUrl = computed(() => {
-    return this.logoutUrl() + '&returnUrl=' + environment.postLogoutRedirectUrl;
+    return this.logoutUrl(); //+ '&returnUrl=' + environment.postLogoutRedirectUrl;
   });
   private _snackBar = inject(MatSnackBar);
   private destroy$ = new Subject<boolean>();

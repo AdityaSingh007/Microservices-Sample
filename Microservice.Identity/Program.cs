@@ -86,7 +86,8 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("profile");
     options.Scope.Add("offline_access");
     options.Scope.Add("ApiGateway_Fullaccess");
-    options.SignedOutRedirectUri = builder.Configuration["OIDC:SignedOutRedirectUri"];
+    //options.SignedOutRedirectUri = builder.Configuration["OIDC:SignedOutRedirectUri"];
+    //options.SignedOutCallbackPath = "/bff/signout-callback-oidc";
     options.BackchannelHttpHandler = new HttpClientHandler
     {
         ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
@@ -105,6 +106,18 @@ builder.Services.AddAuthentication(options =>
              Console.WriteLine($"Redirect URI: {context.ProtocolMessage.RedirectUri}");
              return Task.CompletedTask;
          },
+        OnRemoteSignOut = context => 
+        {
+            Console.WriteLine("Remote sign-out detected.");
+            return Task.CompletedTask;
+        },
+        OnSignedOutCallbackRedirect = (context) =>
+        {
+            Console.WriteLine("OnSignedOutCallbackRedirect event callback initiated.");
+            context.Response.Redirect(builder.Configuration["OIDC:SignedOutRedirectUri"] ?? string.Empty); // Redirect to a custom page
+            context.HandleResponse(); // Prevent default handling
+            return Task.CompletedTask;
+        }
     };
 });
 

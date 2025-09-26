@@ -44,12 +44,16 @@ spec:
               value: preview,token-exchange
             - name: KC_HEALTH_ENABLED
               value: "true"
+            - name: KC_METRICS_ENABLED
+              value: "true"
             - name: KC_HTTPS_CERTIFICATE_FILE
               value: /opt/keycloak/conf/server.crt
             - name: KC_HTTPS_CERTIFICATE_KEY_FILE
               value: /opt/keycloak/conf/server.key
             - name: KC_HTTP_RELATIVE_PATH
               value: /auth
+            - name: KC_HTTP_MANAGEMENT_RELATIVE_PATH
+              value: /management
             - name: KEYCLOAK_ADMIN
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
@@ -62,6 +66,8 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8443
+              protocol: TCP
+            - containerPort: 9000
               protocol: TCP
           readinessProbe:
             httpGet:
