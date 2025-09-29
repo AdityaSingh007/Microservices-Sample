@@ -1,6 +1,6 @@
 {
-  "login": "https://localhost/mf-login/remoteEntry.mjs",
-  "customer": "https://localhost/mf-customer/remoteEntry.mjs",
-  "transaction": "https://localhost/mf-transaction/remoteEntry.mjs",
-  "account": "https://localhost/mf-account/remoteEntry.mjs"
+  "login": "https://20.242.216.159/mf-login/remoteEntry.mjs",
+  "customer": "https://20.242.216.159/mf-customer/remoteEntry.mjs",
+  "transaction": "https://20.242.216.159/mf-transaction/remoteEntry.mjs",
+  "account": "https://20.242.216.159/mf-account/remoteEntry.mjs"
 }

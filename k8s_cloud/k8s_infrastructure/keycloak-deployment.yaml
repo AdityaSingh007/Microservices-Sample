@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: microservices-keycloak-identity
+    microservices-keycloak-identity-pod: microservices-keycloak-identity
   name: microservices-keycloak-identity
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: microservices-keycloak-identity
+      microservices-keycloak-identity-pod: microservices-keycloak-identity
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: microservices-keycloak-identity
+        microservices-keycloak-identity-pod: microservices-keycloak-identity
     spec:
       volumes:
         - name: keycloak-pv-storage
@@ -44,12 +44,16 @@ spec:
               value: preview,token-exchange
             - name: KC_HEALTH_ENABLED
               value: "true"
+            - name: KC_METRICS_ENABLED
+              value: "true"
             - name: KC_HTTPS_CERTIFICATE_FILE
               value: /opt/keycloak/conf/server.crt
             - name: KC_HTTPS_CERTIFICATE_KEY_FILE
               value: /opt/keycloak/conf/server.key
             - name: KC_HTTP_RELATIVE_PATH
               value: /auth
+            - name: KC_HTTP_MANAGEMENT_RELATIVE_PATH
+              value: /management
             - name: KEYCLOAK_ADMIN
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
@@ -59,12 +63,16 @@ spec:
                   name: microservices-secrets
           image: quay.io/keycloak/keycloak:26.2.4
           name: microservices-keycloak-identity
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8443
+              protocol: TCP
+            - containerPort: 9000
+              protocol: TCP
           readinessProbe:
             httpGet:
-              path: /auth/health/ready
-              port: 9000
+              path: /auth/realms/master
+              port: 8443
               scheme: HTTPS
             initialDelaySeconds: 60
             periodSeconds: 5
@@ -81,10 +89,3 @@ spec:
               name: keycloak-pv-storage
               subPath: kubernetes-mount/Https-Certificates/localhost.key
       restartPolicy: Always
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: default
-  labels:
-    shared-gateway-access: "true"

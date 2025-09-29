@@ -5,7 +5,7 @@ metadata:
     microservice3-Pod: microservice3
   name: microservice3
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: "8081"
       port: 8081

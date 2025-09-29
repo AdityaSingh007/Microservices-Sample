@@ -1,0 +1,7 @@
+gatewayProxies:
+  gatewayProxy:
+    disabled: true
+gloo:
+  disableLeaderElection: true
+kubeGateway:
+  enabled: true

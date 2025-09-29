@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: microservices-keycloak-identity-svc
+  labels:
+    microservices-keycloak-identity-pod: microservices-keycloak-identity
+  name: microservices-keycloak-identity
 spec:
   type: ClusterIP
   ports:
     - port: 8443
-      name: https-8443
+      protocol: TCP
       targetPort: 8443
   selector:
-    app: microservices-keycloak-identity
+    microservices-keycloak-identity-pod: microservices-keycloak-identity

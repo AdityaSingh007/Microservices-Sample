@@ -1,8 +1,8 @@
 export const environment = {
   production: true,
   mfManifestFileUrl: '/module-federation-prod.manifest.json',
-  returnUrl: 'https://localhost:4200',
+  returnUrl: 'https://20.242.216.159/mf-shell',
   authCallbackUrl:
-    'https://localhost/bff/login?returnUrl=https://localhost:4200',
-  postLogoutRedirectUrl: 'https://localhost:4200',
+    'https://20.242.216.159/bff/login?returnUrl=https://20.242.216.159/mf-shell',
+  postLogoutRedirectUrl: 'https://20.242.216.159/mf-shell',
 };

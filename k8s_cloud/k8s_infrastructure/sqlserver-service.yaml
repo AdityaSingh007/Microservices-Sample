@@ -7,9 +7,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - name: "1433"
-      port: 1433
-      protocol: TCP
-      targetPort: 1433
+    - name: "microservices-sqlserver-port"
+      port: 1433 # Port exposed by the service within the cluster
+      targetPort: 1433 # Port on which the SQL Server container listens
   selector:
     microservices-sqlserver-pod: microservices-sqlserver

@@ -24,7 +24,7 @@
 
 ## helm repo update
 
-## helm install -n gloo-system gloo gloo/gloo --create-namespace --version 1.20.1
+## helm install -n gloo-system gloo gloo/gloo --create-namespace --version 1.20.1 -f gloo-gateway-values.yaml
 
 **Verify gloo api gateway installation**
 
@@ -36,7 +36,7 @@
 
 ## kubectl apply -f k8s_gateway/gateway-deployment.yaml
 
-## kubectl get gateway http -n gloo-system
+## kubectl get gateway ms-gateway -n gloo-system
 
 **set up azure container registry secert**
 
@@ -45,6 +45,8 @@
 **Deploy secrets**
 
 ### kubectl apply -f k8s_secret
+
+### kubectl create secret tls ms-tls-secret --cert=localhost.crt --key=localhost.key
 
 **Deploy infrastructure**
 

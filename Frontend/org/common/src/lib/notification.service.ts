@@ -10,7 +10,7 @@ export class NotificationService {
   public notifiy = new BehaviorSubject<string>('');
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost/notificationHub', {
+      .withUrl('https://20.242.216.159/notificationHub', {
         headers: {
           'X-CSRF': '1', // Custom header for CSRF protection
         },

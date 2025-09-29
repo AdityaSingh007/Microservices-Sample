@@ -39,6 +39,16 @@ spec:
             ]
       containers:
         - env:
+            - name: keycloak_host_Ip
+              valueFrom:
+                configMapKeyRef:
+                  name: ms-configmap
+                  key: keycloak_host_Ip
+            - name: keycloak_host_Port
+              valueFrom:
+                configMapKeyRef:
+                  name: ms-configmap
+                  key: keycloak_host_Port
             - name: ASPNETCORE_ENVIRONMENT
               value: Production
             - name: ASPNETCORE_HTTPS_PORTS
@@ -59,10 +69,10 @@ spec:
             - name: LoggingParameters__LoggingUrl
               value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
             - name: OIDC__Authority
-              value: https://20.253.43.110:30000/auth/realms/MicroserviceIdentity
+              value: "https://$(keycloak_host_Ip)/auth/realms/MicroserviceIdentity"
           image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice-identity:latest
           name: microservice-identity
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
               protocol: TCP

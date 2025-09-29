@@ -5,7 +5,7 @@ metadata:
     app-customer-pod: app-customer
   name: app-customer
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: "4202"
       port: 4202

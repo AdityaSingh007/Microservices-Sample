@@ -4,5 +4,5 @@ metadata:
   name: ms-configmap
   namespace: default # Optional: specify a namespace, defaults to 'default'
 data:
-  keycloak_host_Ip: "192.168.31.72"
-  keycloak_host_Port: "30000"
+  keycloak_host_Ip: "20.242.216.159"
+  keycloak_host_Port: "8443"
