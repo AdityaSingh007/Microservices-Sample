@@ -10,7 +10,7 @@ spec:
       persistentVolumeClaim:
         claimName: local-pv-volume-claim
   containers:
-    - image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/frontend/app-account
+    - image: adityasingh1991/microservices_onprem:app-account
       name: app-account
       imagePullPolicy: IfNotPresent
       ports:
@@ -25,4 +25,4 @@ spec:
           subPath: Frontend-Https-Certificates/localhost.key
   restartPolicy: OnFailure
   imagePullSecrets:
-    - name: acr-secret
+    - name: dockerhub-secret

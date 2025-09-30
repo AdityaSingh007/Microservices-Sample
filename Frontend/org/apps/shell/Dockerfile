@@ -18,7 +18,7 @@ RUN pnpm install
 # Install NX CLI globally
 RUN pnpm add -g nx
 
-RUN npx nx build shell --configuration=production
+RUN npx nx build shell --configuration=onPrem
 
 #stage 2
 FROM nginx:alpine

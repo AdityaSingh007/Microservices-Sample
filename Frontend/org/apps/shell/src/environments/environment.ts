@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  frontendHost: 'localhost',
   mfManifestFileUrl: '/module-federation-dev.manifest.json',
   enableDebug: true,
   authCallbackUrl:

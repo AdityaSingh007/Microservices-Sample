@@ -71,8 +71,12 @@ spec:
             - name: OIDC__Authority
               value: "https://$(keycloak_host_Ip)/auth/realms/MicroserviceIdentity"
             - name: OIDC__SignedOutRedirectUri
-              value: "https://localhost:4200/signout-callback-oidc"
-          image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice-identity:latest
+              value: "https://localhost/mf-shell/signout-callback-oidc"
+            - name: FrontEndHost
+              value: "localhost"
+            - name: FrontEndPort
+              value: "4200"
+          image: adityasingh1991/microservices_onprem:microservice-identity
           name: microservice-identity
           imagePullPolicy: IfNotPresent
           ports:
@@ -84,4 +88,4 @@ spec:
               subPath: Backend-Https-Certificates/aspnetapp.pfx
       restartPolicy: Always
       imagePullSecrets:
-        - name: acr-secret
+        - name: dockerHub-secret

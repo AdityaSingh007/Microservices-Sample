@@ -1,6 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
+import {
+  COMMON_LIB_ENVIRONMENT,
+  LibEnvironment,
+} from '../model/common-lib.config';
 
 @Injectable({
   providedIn: 'root',
@@ -8,9 +12,9 @@ import { BehaviorSubject } from 'rxjs';
 export class NotificationService {
   private hubConnection: signalR.HubConnection;
   public notifiy = new BehaviorSubject<string>('');
-  constructor() {
+  constructor(@Inject(COMMON_LIB_ENVIRONMENT) env: LibEnvironment) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://20.242.216.159/notificationHub', {
+      .withUrl(`https://${env.frontendHost}/notificationHub`, {
         headers: {
           'X-CSRF': '1', // Custom header for CSRF protection
         },

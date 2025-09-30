@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  frontendHost: '20.242.216.159',
   mfManifestFileUrl: '/module-federation-prod.manifest.json',
   returnUrl: 'https://20.242.216.159/mf-shell',
   authCallbackUrl:

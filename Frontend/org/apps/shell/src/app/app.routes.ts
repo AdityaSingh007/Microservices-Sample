@@ -31,4 +31,8 @@ export const appRoutes: Route[] = [
     path: '',
     component: HomePageComponent,
   },
+  {
+    path: '**',
+    component: HomePageComponent,
+  },
 ];
