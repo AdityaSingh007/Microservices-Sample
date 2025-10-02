@@ -66,7 +66,7 @@ spec:
               value: "https://$(keycloak_host_Ip)/auth/realms/MicroserviceIdentity"
             - name: AuthenticationParameters__TokenEndpoint
               value: "https://$(keycloak_host_Ip)/auth/realms/MicroserviceIdentity/protocol/openid-connect/token"
-          image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/gatewayapi:latest
+          image: adityasingh1991/microservices_cloud:gatewayapi
           name: gateway-api
           imagePullPolicy: Always
           ports:
@@ -81,4 +81,4 @@ spec:
               subPath: kubernetes-mount/Https
       restartPolicy: Always
       imagePullSecrets:
-        - name: acr-secret
+        - name: dockerHub-secret

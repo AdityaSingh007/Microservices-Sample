@@ -70,7 +70,7 @@ spec:
               value: elastic
             - name: LoggingParameters__LoggingUrl
               value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
-          image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice1:latest
+          image: adityasingh1991/microservices_cloud:microservice1
           imagePullPolicy: IfNotPresent
           name: microservice1
           volumeMounts:
@@ -82,4 +82,4 @@ spec:
               subPath: kubernetes-mount/Https
       restartPolicy: Always
       imagePullSecrets:
-        - name: acr-secret
+        - name: dockerHub-secret

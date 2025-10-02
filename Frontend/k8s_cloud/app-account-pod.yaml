@@ -10,7 +10,7 @@ spec:
       persistentVolumeClaim:
         claimName: azurefile
   containers:
-    - image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/frontend/app-account
+    - image: adityasingh1991/microservices_cloud:app-account
       name: app-account
       imagePullPolicy: IfNotPresent
       ports:
@@ -25,4 +25,4 @@ spec:
           subPath: kubernetes-mount/Https-Frontend-Certificates/localhost.key
   restartPolicy: OnFailure
   imagePullSecrets:
-    - name: acr-secret
+    - name: dockerHub-secret

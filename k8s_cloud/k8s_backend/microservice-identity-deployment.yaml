@@ -70,7 +70,13 @@ spec:
               value: https://elasticsearch-https-service.elastic-system.svc.cluster.local:9200
             - name: OIDC__Authority
               value: "https://$(keycloak_host_Ip)/auth/realms/MicroserviceIdentity"
-          image: microservicesprivate-cngmana9bbhsa5ck.azurecr.io/backend/microservice-identity:latest
+            - name: FrontEndHost
+              value: "20.242.216.159"
+            - name: FrontEndPort
+              value: "4200"
+            - name: OIDC__SignedOutRedirectUri
+              value: "https://20.242.216.159/mf-shell/signout-callback-oidc"
+          image: adityasingh1991/microservices_cloud:microservice-identity
           name: microservice-identity
           imagePullPolicy: Always
           ports:
@@ -85,4 +91,4 @@ spec:
               subPath: kubernetes-mount/Https
       restartPolicy: Always
       imagePullSecrets:
-        - name: acr-secret
+        - name: dockerHub-secret
