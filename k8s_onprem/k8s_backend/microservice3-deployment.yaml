@@ -35,7 +35,7 @@ spec:
             [
               "sh",
               "-c",
-              "until nslookup microservices-sqlserver.default.svc.cluster.local; do echo 'waiting for microservices-sqlserver'; sleep 2; done",
+              "until nslookup mssql-0.mssql-headless.default.svc.cluster.local; do echo 'waiting for microservices-sqlserver'; sleep 2; done",
             ]
         - name: wait-for-microservice1
           image: busybox:latest

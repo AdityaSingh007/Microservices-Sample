@@ -23,7 +23,7 @@ spec:
         [
           "sh",
           "-c",
-          "sleep 60 && /opt/mssql-tools/bin/sqlcmd -S microservices-sqlserver -l 60 -U sa -P ${MSSQL_SA_PASSWORD} -d master -i /tmp/mssql-init.sql",
+          "sleep 60 && /opt/mssql-tools/bin/sqlcmd -S mssql-0.mssql-headless.default.svc.cluster.local -l 60 -U sa -P ${MSSQL_SA_PASSWORD} -d master -i /tmp/mssql-init.sql",
         ]
       volumeMounts:
         - mountPath: /tmp/mssql-init.sql

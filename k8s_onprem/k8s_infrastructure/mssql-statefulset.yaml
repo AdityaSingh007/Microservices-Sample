@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mssql
+spec:
+  serviceName: "mssql-headless"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql
+  template:
+    metadata:
+      labels:
+        app: mssql
+    spec:
+      securityContext:
+        fsGroup: 10001
+        runAsUser: 0
+      volumes:
+        - name: mssql-pv-storage
+          persistentVolumeClaim:
+            claimName: local-pv-volume-claim
+      containers:
+        - name: mssql # container name within the pod.
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          ports:
+            - containerPort: 1433
+              name: tcpsql
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-secrets
+                  key: MSSQL_SA_PASSWORD
+            - name: MSSQL_PID
+              value: "Developer" # or Enterprise, Standard, etc.
+          volumeMounts:
+            - name: mssql-pv-storage
+              mountPath: "/var/opt/mssql/data"
+              subPath: mssql-data
